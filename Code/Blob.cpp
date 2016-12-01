@@ -12,6 +12,16 @@ Blob::Blob( void )
 {
 }
 
+void Blob::Render( _3DMath::Renderer& renderer )
+{
+	renderer.DrawTriangleMesh( triangleMesh );
+}
+
+_3DMath::Vector Blob::GetCenter( void ) const
+{
+	return particleSystem.centerOfMass;
+}
+
 void Blob::MakeRegularHexadron( void )
 {
 	triangleMesh.Clear();
@@ -22,8 +32,20 @@ void Blob::MakeRegularHexadron( void )
 	MakeSpring( Vector( 1.0, -1.0, 1.0 ) );
 	MakeSpring( Vector( -1.0, -1.0, 1.0 ) );
 
-	//MakeSpring( 0, 2 );
-	//MakeSpring( 
+	MakeSpring( 0, 2 );
+	MakeSpring( 2, 6 );
+	MakeSpring( 6, 4 );
+	MakeSpring( 4, 0 );
+
+	MakeSpring( 7, 5 );
+	MakeSpring( 5, 1 );
+	MakeSpring( 1, 3 );
+	MakeSpring( 3, 7 );
+
+	MakeSpring( 0, 7 );
+	MakeSpring( 2, 5 );
+	MakeSpring( 6, 1 );
+	MakeSpring( 4, 3 );
 
 	triangleMesh.FindConvexHull();
 	triangleMesh.CalculateNormals();
@@ -75,7 +97,7 @@ void Blob::MakeSpring( const Vector& vector )
 	Vector negativeVector;
 	vector.GetNegated( negativeVector );
 
-	TriangleMesh::Vertex vertex;
+	Vertex vertex;
 	
 	vertex.position = vector;
 	triangleMesh.vertexArray->push_back( vertex );

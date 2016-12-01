@@ -4,6 +4,7 @@
 
 #include <TriangleMesh.h>
 #include <ParticleSystem.h>
+#include <Renderer.h>
 
 class Blob
 {
@@ -12,9 +13,13 @@ public:
 	Blob( void );
 	virtual ~Blob( void );
 
+	void Render( _3DMath::Renderer& renderer );
+
 	void MakeRegularHexadron( void );
 	void MakeRegularIcosahedron( void );
 	void MakeRegularDodecahedron( void );
+
+	_3DMath::Vector GetCenter( void ) const;
 
 private:
 

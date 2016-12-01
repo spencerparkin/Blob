@@ -147,14 +147,18 @@
   <ItemGroup>
     <ClInclude Include="Code\Application.h" />
     <ClInclude Include="Code\Blob.h" />
+    <ClInclude Include="Code\Camera.h" />
     <ClInclude Include="Code\Canvas.h" />
     <ClInclude Include="Code\Frame.h" />
+    <ClInclude Include="Code\GLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp" />
     <ClCompile Include="Code\Blob.cpp" />
+    <ClCompile Include="Code\Camera.cpp" />
     <ClCompile Include="Code\Canvas.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
+    <ClCompile Include="Code\GLRenderer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

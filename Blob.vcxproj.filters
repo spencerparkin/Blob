@@ -19,6 +19,12 @@
     <ClInclude Include="Code\Canvas.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\GLRenderer.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Camera.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -31,6 +37,12 @@
       <Filter>Code</Filter>
     </ClCompile>
     <ClCompile Include="Code\Blob.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GLRenderer.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Camera.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>

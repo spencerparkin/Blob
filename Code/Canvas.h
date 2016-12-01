@@ -4,6 +4,9 @@
 
 #include <wx/glcanvas.h>
 
+class GLRenderer;
+class Camera;
+
 class Canvas : public wxGLCanvas
 {
 public:
@@ -21,6 +24,8 @@ private:
 	void BindContext( void );
 
 	wxGLContext* context;
+	GLRenderer* renderer;
+	Camera* camera;
 };
 
 // Canvas.h

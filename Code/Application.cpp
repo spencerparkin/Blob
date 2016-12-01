@@ -21,6 +21,7 @@ Application::Application( void )
 		return false;
 
 	blob = new Blob();
+	blob->MakeRegularHexadron();
 
 	frame = new Frame();
 	frame->Show();
