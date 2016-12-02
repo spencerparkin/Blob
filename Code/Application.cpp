@@ -4,6 +4,7 @@
 #include "Frame.h"
 #include "Blob.h"
 #include "Controller.h"
+#include <wx/image.h>
 
 Application::Application( void )
 {
@@ -23,6 +24,8 @@ Application::Application( void )
 	if( !wxApp::OnInit() )
 		return false;
 
+	wxInitAllImageHandlers();
+
 	controller = new XboxController();
 	if( !controller->SetupAndConnect() )
 	{
@@ -40,7 +43,7 @@ Application::Application( void )
 	}
 
 	blob = new Blob();
-	blob->MakeRegularHexadron();
+	blob->MakePolyhedron( Blob::DODECAHEDRON );
 
 	frame = new Frame();
 	frame->Show();

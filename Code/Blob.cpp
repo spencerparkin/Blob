@@ -1,19 +1,30 @@
 // Blob.cpp
 
 #include "Blob.h"
+#include "Texture.h"
 
 using namespace _3DMath;
 
 Blob::Blob( void )
 {
+	texture = nullptr;
 }
 
 /*virtual*/ Blob::~Blob( void )
 {
+	delete texture;
 }
 
 void Blob::Render( _3DMath::Renderer& renderer )
 {
+	if( !texture )
+	{
+		texture = new Texture();
+		texture->Load( "Textures/Globe.png" );
+	}
+
+	texture->Bind();
+
 	renderer.DrawTriangleMesh( triangleMesh );
 }
 
@@ -22,74 +33,73 @@ void Blob::Render( _3DMath::Renderer& renderer )
 	location = particleSystem.centerOfMass;
 }
 
-void Blob::MakeRegularHexadron( void )
+void Blob::MakePolyhedron( Polyhedron polyhedron )
 {
 	triangleMesh.Clear();
 	particleSystem.Clear();
 
-	MakeSpring( Vector( 1.0, 1.0, 1.0 ) );
-	MakeSpring( Vector( -1.0, 1.0, 1.0 ) );
-	MakeSpring( Vector( 1.0, -1.0, 1.0 ) );
-	MakeSpring( Vector( -1.0, -1.0, 1.0 ) );
+	switch( polyhedron )
+	{
+		case HEXADRON:
+		{
+			MakeSpring( Vector( 1.0, 1.0, 1.0 ) );
+			MakeSpring( Vector( -1.0, 1.0, 1.0 ) );
+			MakeSpring( Vector( 1.0, -1.0, 1.0 ) );
+			MakeSpring( Vector( -1.0, -1.0, 1.0 ) );
 
-	MakeSpring( 0, 2 );
-	MakeSpring( 2, 6 );
-	MakeSpring( 6, 4 );
-	MakeSpring( 4, 0 );
+			MakeSpring( 0, 2 );
+			MakeSpring( 2, 6 );
+			MakeSpring( 6, 4 );
+			MakeSpring( 4, 0 );
 
-	MakeSpring( 7, 5 );
-	MakeSpring( 5, 1 );
-	MakeSpring( 1, 3 );
-	MakeSpring( 3, 7 );
+			MakeSpring( 7, 5 );
+			MakeSpring( 5, 1 );
+			MakeSpring( 1, 3 );
+			MakeSpring( 3, 7 );
 
-	MakeSpring( 0, 7 );
-	MakeSpring( 2, 5 );
-	MakeSpring( 6, 1 );
-	MakeSpring( 4, 3 );
+			MakeSpring( 0, 7 );
+			MakeSpring( 2, 5 );
+			MakeSpring( 6, 1 );
+			MakeSpring( 4, 3 );
 
-	triangleMesh.FindConvexHull();
-	triangleMesh.CalculateNormals();
-}
+			break;
+		}
+		case ICOSAHEDRON:
+		{
+			MakeSpring( Vector( 0.0, 1.0, PHI ) );
+			MakeSpring( Vector( 0.0, -1.0, PHI ) );
 
-void Blob::MakeRegularIcosahedron( void )
-{
-	triangleMesh.Clear();
-	particleSystem.Clear();
+			MakeSpring( Vector( 1.0, PHI, 0.0 ) );
+			MakeSpring( Vector( -1.0, PHI, 0.0 ) );
 
-	MakeSpring( Vector( 0.0, 1.0, PHI ) );
-	MakeSpring( Vector( 0.0, -1.0, PHI ) );
+			MakeSpring( Vector( PHI, 0.0, 1.0 ) );
+			MakeSpring( Vector( PHI, 0.0, -1.0 ) );
 
-	MakeSpring( Vector( 1.0, PHI, 0.0 ) );
-	MakeSpring( Vector( -1.0, PHI, 0.0 ) );
+			break;
+		}
+		case DODECAHEDRON:
+		{
+			MakeSpring( Vector( 1.0, 1.0, 1.0 ) );
+			MakeSpring( Vector( -1.0, 1.0, 1.0 ) );
+			MakeSpring( Vector( 1.0, -1.0, 1.0 ) );
+			MakeSpring( Vector( -1.0, -1.0, 1.0 ) );
 
-	MakeSpring( Vector( PHI, 0.0, 1.0 ) );
-	MakeSpring( Vector( PHI, 0.0, -1.0 ) );
+			MakeSpring( Vector( 0.0, 1.0 / PHI, PHI ) );
+			MakeSpring( Vector( 0.0, -1.0 / PHI, PHI ) );
 
-	triangleMesh.FindConvexHull();
-	triangleMesh.CalculateNormals();
-}
+			MakeSpring( Vector( 1.0 / PHI, PHI, 0.0 ) );
+			MakeSpring( Vector( -1.0 / PHI, PHI, 0.0 ) );
 
-void Blob::MakeRegularDodecahedron( void )
-{
-	triangleMesh.Clear();
-	particleSystem.Clear();
+			MakeSpring( Vector( PHI, 0.0, 1.0 / PHI ) );
+			MakeSpring( Vector( PHI, 0.0, -1.0 / PHI ) );
 
-	MakeSpring( Vector( 1.0, 1.0, 1.0 ) );
-	MakeSpring( Vector( -1.0, 1.0, 1.0 ) );
-	MakeSpring( Vector( 1.0, -1.0, 1.0 ) );
-	MakeSpring( Vector( -1.0, -1.0, 1.0 ) );
-
-	MakeSpring( Vector( 0.0, 1.0 / PHI, PHI ) );
-	MakeSpring( Vector( 0.0, -1.0 / PHI, PHI ) );
-
-	MakeSpring( Vector( 1.0 / PHI, PHI, 0.0 ) );
-	MakeSpring( Vector( -1.0 / PHI, PHI, 0.0 ) );
-
-	MakeSpring( Vector( PHI, 0.0, 1.0 / PHI ) );
-	MakeSpring( Vector( PHI, 0.0, -1.0 / PHI ) );
+			break;
+		}
+	}
 
 	triangleMesh.FindConvexHull();
 	triangleMesh.CalculateNormals();
+	triangleMesh.CalculateSphericalUVs();
 }
 
 void Blob::MakeSpring( const Vector& vector )

@@ -28,6 +28,9 @@
     <ClInclude Include="Code\Controller.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Texture.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -49,6 +52,9 @@
       <Filter>Code</Filter>
     </ClCompile>
     <ClCompile Include="Code\Controller.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Texture.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>

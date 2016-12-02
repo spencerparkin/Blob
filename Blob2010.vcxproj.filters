@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Code">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Code\Application.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Blob.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Camera.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Canvas.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Controller.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Frame.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GLRenderer.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Texture.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Code\Application.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Blob.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Camera.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Canvas.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Controller.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Frame.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GLRenderer.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Texture.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -38,7 +38,7 @@ public:
 	virtual bool SetupAndConnect( void ) = 0;
 	virtual bool UpdateState( void ) = 0;
 	virtual bool ButtonDown( int button ) = 0;
-	virtual bool ButtonUp( int button ) = 0;
+	virtual bool ButtonUp( int button );
 	virtual bool ButtonPressed( int button ) = 0;
 	virtual void GetAnalogTrigger( int side, double& value ) = 0;
 	virtual void GetAnalogJoyStick( int side, _3DMath::Vector& unitDir, double& mag ) = 0;
@@ -54,7 +54,6 @@ public:
 	virtual bool SetupAndConnect( void ) override;
 	virtual bool UpdateState( void ) override;
 	virtual bool ButtonDown( int button ) override;
-	virtual bool ButtonUp( int button ) override;
 	virtual bool ButtonPressed( int button ) override;
 	virtual void GetAnalogTrigger( int side, double& value ) override;
 	virtual void GetAnalogJoyStick( int side, _3DMath::Vector& unitDir, double& mag ) override;
@@ -78,10 +77,11 @@ public:
 	virtual bool SetupAndConnect( void ) override;
 	virtual bool UpdateState( void ) override;
 	virtual bool ButtonDown( int button ) override;
-	virtual bool ButtonUp( int button ) override;
 	virtual bool ButtonPressed( int button ) override;
 	virtual void GetAnalogTrigger( int side, double& value ) override;
 	virtual void GetAnalogJoyStick( int side, _3DMath::Vector& unitDir, double& mag ) override;
+
+	unsigned char MapButtonToKeyboardKey( int button );
 };
 
 class JoyStickController : public Controller
@@ -94,7 +94,6 @@ public:
 	virtual bool SetupAndConnect( void ) override;
 	virtual bool UpdateState( void ) override;
 	virtual bool ButtonDown( int button ) override;
-	virtual bool ButtonUp( int button ) override;
 	virtual bool ButtonPressed( int button ) override;
 	virtual void GetAnalogTrigger( int side, double& value ) override;
 	virtual void GetAnalogJoyStick( int side, _3DMath::Vector& unitDir, double& mag ) override;
