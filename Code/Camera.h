@@ -3,8 +3,6 @@
 #pragma once
 
 #include <Vector.h>
-#include <AffineTransform.h>
-#include <wx/glcanvas.h>
 
 class Camera
 {
@@ -13,15 +11,23 @@ public:
 	Camera( void );
 	virtual ~Camera( void );
 	
-	void TrackSubject( double currentTime );
+	class Subject
+	{
+	public:
+		virtual void GetLocation( _3DMath::Vector& location ) const = 0;
+	};
+
+	void Update( double currentTime );
 	void SetupOpenGLViewingMatrices( void );
 
-	_3DMath::Vector subjectPosition;
-	double followingDistance;
-	double followingHoverHeight;
-
-	_3DMath::AffineTransform viewTransform;
+	Subject* subject;
+	double distanceToSubject;
+	double theta, phi;
 	double viewAngle;
+	double lastUpdateTime;
+	double zoomRate;
+	double thetaChangeRate;
+	double phiChangeRate;
 };
 
 // Camera.h

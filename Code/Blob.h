@@ -5,8 +5,9 @@
 #include <TriangleMesh.h>
 #include <ParticleSystem.h>
 #include <Renderer.h>
+#include "Camera.h"
 
-class Blob
+class Blob : public Camera::Subject
 {
 public:
 
@@ -19,7 +20,7 @@ public:
 	void MakeRegularIcosahedron( void );
 	void MakeRegularDodecahedron( void );
 
-	_3DMath::Vector GetCenter( void ) const;
+	virtual void GetLocation( _3DMath::Vector& location ) const override;
 
 private:
 

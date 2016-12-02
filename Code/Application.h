@@ -6,6 +6,7 @@
 
 class Frame;
 class Blob;
+class Controller;
 
 class Application : public wxApp
 {
@@ -18,6 +19,7 @@ public:
 
 	Frame* frame;
 	Blob* blob;
+	Controller* controller;
 };
 
 wxDECLARE_APP( Application );

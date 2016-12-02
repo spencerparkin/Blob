@@ -16,6 +16,8 @@ public:
 	Canvas( wxWindow* parent );
 	virtual ~Canvas( void );
 
+	void Advance( void );
+
 private:
 
 	void OnPaint( wxPaintEvent& event );
@@ -26,6 +28,7 @@ private:
 	wxGLContext* context;
 	GLRenderer* renderer;
 	Camera* camera;
+	double baseTime;
 };
 
 // Canvas.h

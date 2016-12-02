@@ -17,9 +17,9 @@ void Blob::Render( _3DMath::Renderer& renderer )
 	renderer.DrawTriangleMesh( triangleMesh );
 }
 
-_3DMath::Vector Blob::GetCenter( void ) const
+/*virtual*/ void Blob::GetLocation( _3DMath::Vector& location ) const
 {
-	return particleSystem.centerOfMass;
+	location = particleSystem.centerOfMass;
 }
 
 void Blob::MakeRegularHexadron( void )

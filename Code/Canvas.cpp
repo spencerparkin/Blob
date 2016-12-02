@@ -5,11 +5,15 @@
 #include "GLRenderer.h"
 #include "Blob.h"
 #include "Camera.h"
+#include "Controller.h"
+#include <wx/time.h>
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
+	baseTime = wxGetLocalTimeMillis().ToDouble();
+
 	context = nullptr;
 	renderer = new GLRenderer();
 	camera = new Camera();
@@ -33,12 +37,25 @@ void Canvas::BindContext( void )
 	SetCurrent( *context );
 }
 
+void Canvas::Advance( void )
+{
+	wxGetApp().controller->UpdateState();
+
+	double currentTime = wxGetLocalTimeMillis().ToDouble() - baseTime;
+
+	camera->Update( currentTime );
+}
+
 void Canvas::OnPaint( wxPaintEvent& event )
 {
+	Advance();
+
 	BindContext();
 
 	glClearColor( 0.f, 0.f, 0.f, 1.f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+	camera->SetupOpenGLViewingMatrices();
 
 	wxGetApp().blob->Render( *renderer );
 
