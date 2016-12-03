@@ -38,104 +38,147 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 	triangleMesh.Clear();
 	particleSystem.Clear();
 
+	double radius = 1.0;
+
 	switch( polyhedron )
 	{
 		case HEXADRON:
 		{
-			MakeSpring( Vector( 1.0, 1.0, 1.0 ) );
-			MakeSpring( Vector( -1.0, 1.0, 1.0 ) );
-			MakeSpring( Vector( 1.0, -1.0, 1.0 ) );
-			MakeSpring( Vector( -1.0, -1.0, 1.0 ) );
+			radius = sqrt( 3.0 );
 
-			MakeSpring( 0, 2 );
-			MakeSpring( 2, 6 );
-			MakeSpring( 6, 4 );
-			MakeSpring( 4, 0 );
-
-			MakeSpring( 7, 5 );
-			MakeSpring( 5, 1 );
-			MakeSpring( 1, 3 );
-			MakeSpring( 3, 7 );
-
-			MakeSpring( 0, 7 );
-			MakeSpring( 2, 5 );
-			MakeSpring( 6, 1 );
-			MakeSpring( 4, 3 );
+			AddVertexPair( Vector( 1.0, 1.0, 1.0 ) );
+			AddVertexPair( Vector( -1.0, 1.0, 1.0 ) );
+			AddVertexPair( Vector( 1.0, -1.0, 1.0 ) );
+			AddVertexPair( Vector( -1.0, -1.0, 1.0 ) );
 
 			break;
 		}
 		case ICOSAHEDRON:
 		{
-			MakeSpring( Vector( 0.0, 1.0, PHI ) );
-			MakeSpring( Vector( 0.0, -1.0, PHI ) );
+			radius = sqrt( 1.0 + PHI * PHI );
 
-			MakeSpring( Vector( 1.0, PHI, 0.0 ) );
-			MakeSpring( Vector( -1.0, PHI, 0.0 ) );
+			AddVertexPair( Vector( 0.0, 1.0, PHI ) );
+			AddVertexPair( Vector( 0.0, -1.0, PHI ) );
 
-			MakeSpring( Vector( PHI, 0.0, 1.0 ) );
-			MakeSpring( Vector( PHI, 0.0, -1.0 ) );
+			AddVertexPair( Vector( 1.0, PHI, 0.0 ) );
+			AddVertexPair( Vector( -1.0, PHI, 0.0 ) );
+
+			AddVertexPair( Vector( PHI, 0.0, 1.0 ) );
+			AddVertexPair( Vector( PHI, 0.0, -1.0 ) );
 
 			break;
 		}
 		case DODECAHEDRON:
 		{
-			MakeSpring( Vector( 1.0, 1.0, 1.0 ) );
-			MakeSpring( Vector( -1.0, 1.0, 1.0 ) );
-			MakeSpring( Vector( 1.0, -1.0, 1.0 ) );
-			MakeSpring( Vector( -1.0, -1.0, 1.0 ) );
+			radius = sqrt( 3.0 );
 
-			MakeSpring( Vector( 0.0, 1.0 / PHI, PHI ) );
-			MakeSpring( Vector( 0.0, -1.0 / PHI, PHI ) );
+			AddVertexPair( Vector( 1.0, 1.0, 1.0 ) );
+			AddVertexPair( Vector( -1.0, 1.0, 1.0 ) );
+			AddVertexPair( Vector( 1.0, -1.0, 1.0 ) );
+			AddVertexPair( Vector( -1.0, -1.0, 1.0 ) );
 
-			MakeSpring( Vector( 1.0 / PHI, PHI, 0.0 ) );
-			MakeSpring( Vector( -1.0 / PHI, PHI, 0.0 ) );
+			AddVertexPair( Vector( 0.0, 1.0 / PHI, PHI ) );
+			AddVertexPair( Vector( 0.0, -1.0 / PHI, PHI ) );
 
-			MakeSpring( Vector( PHI, 0.0, 1.0 / PHI ) );
-			MakeSpring( Vector( PHI, 0.0, -1.0 / PHI ) );
+			AddVertexPair( Vector( 1.0 / PHI, PHI, 0.0 ) );
+			AddVertexPair( Vector( -1.0 / PHI, PHI, 0.0 ) );
+
+			AddVertexPair( Vector( PHI, 0.0, 1.0 / PHI ) );
+			AddVertexPair( Vector( PHI, 0.0, -1.0 / PHI ) );
 
 			break;
 		}
 	}
 
 	triangleMesh.FindConvexHull();
+	triangleMesh.SubdivideAllTriangles( radius );
 	triangleMesh.CalculateNormals();
 	triangleMesh.CalculateSphericalUVs();
+
+	std::vector< int > particleIds;
+
+	for( int i = 0; i < ( int )triangleMesh.vertexArray->size(); i++ )
+	{
+		ParticleSystem::MeshVertexParticle* particle = new ParticleSystem::MeshVertexParticle();
+		particle->index = i;
+		particle->mesh = &triangleMesh;
+
+		particleSystem.particleCollection.AddObject( particle );
+
+		particleIds.push_back( particle->id );
+	}
+
+	TriangleMesh::EdgeSet edgeSet;
+	triangleMesh.GenerateEdgeSet( edgeSet );
+
+	for( TriangleMesh::EdgeSet::iterator iter = edgeSet.begin(); iter != edgeSet.end(); iter++ )
+	{
+		uint64_t edgePair = *iter;
+
+		int index0, index1;
+		TriangleMesh::GetEdgePair( edgePair, index0, index1 );
+
+		MakeSpring( index0, index1, particleIds, 1.0 );
+	}
+
+	edgeSet.clear();
+
+	for( int i = 0; i < ( int )triangleMesh.vertexArray->size(); i++ )
+	{
+		Vertex& vertex = ( *triangleMesh.vertexArray )[i];
+
+		Vector negatedPosition;
+		vertex.position.GetNegated( negatedPosition );
+
+		int j = triangleMesh.FindIndex( negatedPosition );
+		if( j >= 0 )
+		{
+			uint64_t edgePair;
+			TriangleMesh::SetEdgePair( edgePair, i, j );
+
+			TriangleMesh::EdgeSet::iterator iter = edgeSet.find( edgePair );
+			if( iter == edgeSet.end() )
+			{
+				MakeSpring( i, j, particleIds, 1.0 );
+				edgeSet.insert( edgePair );
+			}
+		}
+	}
 }
 
-void Blob::MakeSpring( const Vector& vector )
+void Blob::AddVertexPair( const Vector& vector )
 {
-	Vector negativeVector;
-	vector.GetNegated( negativeVector );
+	Vector negatedVector;
+	vector.GetNegated( negatedVector );
 
 	Vertex vertex;
 	
 	vertex.position = vector;
 	triangleMesh.vertexArray->push_back( vertex );
 
-	vertex.position = negativeVector;
+	vertex.position = negatedVector;
 	triangleMesh.vertexArray->push_back( vertex );
-
-	int index0 = triangleMesh.vertexArray->size() - 2;
-	int index1 = triangleMesh.vertexArray->size() - 1;
-
-	MakeSpring( index0, index1 );
 }
 
-void Blob::MakeSpring( int index0, int index1 )
+void Blob::MakeSpring( int index0, int index1, std::vector< int >& particleIds, double stiffness )
 {
 	Vector position0, position1;
-	triangleMesh.GetVertexPosition( index0, position0 );
-	triangleMesh.GetVertexPosition( index1, position1 );
+
+	ParticleSystem::Particle* particle0 = ( ParticleSystem::Particle* )particleSystem.particleCollection.FindObject( particleIds[ index0 ] );
+	particle0->GetPosition( position0 );
+
+	ParticleSystem::Particle* particle1 = ( ParticleSystem::Particle* )particleSystem.particleCollection.FindObject( particleIds[ index1 ] );
+	particle1->GetPosition( position1 );
 
 	Vector vector;
 	vector.Subtract( position1, position0 );
 	double length = vector.Length();
 
 	ParticleSystem::SpringForce* springForce = new ParticleSystem::SpringForce();
-	springForce->endPointParticleIds[0] = index0;
-	springForce->endPointParticleIds[1] = index1;
+	springForce->endPointParticleIds[0] = particle0->id;
+	springForce->endPointParticleIds[1] = particle1->id;
 	springForce->equilibriumLength = length;
-	springForce->stiffness = 1.0;
+	springForce->stiffness = stiffness;
 
 	particleSystem.forceCollection.AddObject( springForce );
 }

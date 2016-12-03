@@ -33,8 +33,8 @@ private:
 
 	Texture* texture;
 
-	void MakeSpring( const _3DMath::Vector& vector );
-	void MakeSpring( int index0, int index1 );
+	void AddVertexPair( const _3DMath::Vector& vector );
+	void MakeSpring( int index0, int index1, std::vector< int >& particleIds, double stiffness );
 
 	_3DMath::ParticleSystem particleSystem;
 	_3DMath::TriangleMesh triangleMesh;
