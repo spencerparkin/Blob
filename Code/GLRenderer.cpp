@@ -42,4 +42,9 @@ GLRenderer::GLRenderer( void )
 	glVertex3d( vertex.position.x, vertex.position.y, vertex.position.z );
 }
 
+/*virtual*/ void GLRenderer::Color( const _3DMath::Vector& color, double alpha )
+{
+	glColor4d( color.x, color.y, color.z, alpha );
+}
+
 // GLRenderer.cpp

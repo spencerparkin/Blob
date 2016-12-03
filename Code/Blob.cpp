@@ -174,7 +174,7 @@ void Blob::MakeSpring( int index0, int index1, std::vector< int >& particleIds, 
 	vector.Subtract( position1, position0 );
 	double length = vector.Length();
 
-	ParticleSystem::SpringForce* springForce = new ParticleSystem::SpringForce();
+	ParticleSystem::SpringForce* springForce = new ParticleSystem::SpringForce( &particleSystem );
 	springForce->endPointParticleIds[0] = particle0->id;
 	springForce->endPointParticleIds[1] = particle1->id;
 	springForce->equilibriumLength = length;

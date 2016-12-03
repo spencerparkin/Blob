@@ -14,6 +14,7 @@ public:
 	virtual void BeginDrawMode( DrawMode drawMode ) override;
 	virtual void EndDrawMode( void ) override;
 	virtual void IssueVertex( const _3DMath::Vertex& vertex ) override;
+	virtual void Color( const _3DMath::Vector& color, double alpha ) override;
 };
 
 // GLRenderer.h
