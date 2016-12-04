@@ -25,7 +25,7 @@ void Blob::Render( _3DMath::Renderer& renderer )
 
 	texture->Bind();
 
-	renderer.DrawTriangleMesh( triangleMesh );
+	renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
 }
 
 /*virtual*/ void Blob::GetLocation( _3DMath::Vector& location ) const
