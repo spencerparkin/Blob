@@ -34,6 +34,8 @@ void Camera::Update( double currentTime )
 
 	Controller* controller = wxGetApp().controller;
 
+	// TODO: Probably need to revisit this and rework the design.  There's surely a better way to control the camera.
+
 	double zoomDelta = 0.0;
 	if( controller->ButtonDown( Controller::BUTTON_L_SHOULDER ) )
 		zoomDelta += zoomRate * deltaTime;
@@ -50,6 +52,34 @@ void Camera::Update( double currentTime )
 	phi += phiChangeRate * deltaTime * unitDir.y * mag;
 }
 
+void Camera::GetViewParameters( _3DMath::Vector& eye, _3DMath::Vector& subjectLocation, _3DMath::Vector& up ) const
+{
+	up.Set( 0.0, 1.0, 0.0 );
+
+	subjectLocation.Set( 0.0, 0.0, 0.0 );
+	if( subject )
+		subject->GetLocation( subjectLocation );
+
+	eye.x = cos( theta ) * cos( phi );
+	eye.y = sin( phi );
+	eye.z = sin( theta ) * cos( phi );
+	eye.Scale( distanceToSubject );
+	eye.Add( subjectLocation );
+}
+
+void Camera::GetViewTransform( _3DMath::AffineTransform& viewTransform ) const
+{
+	_3DMath::Vector eye, subjectLocation, up;
+	GetViewParameters( eye, subjectLocation, up );
+
+	viewTransform.linearTransform.zAxis.Subtract( eye, subjectLocation );
+	viewTransform.linearTransform.zAxis.Normalize();
+	viewTransform.linearTransform.xAxis.Cross( viewTransform.linearTransform.zAxis, up );
+	viewTransform.linearTransform.xAxis.Normalize();
+	viewTransform.linearTransform.yAxis.Cross( viewTransform.linearTransform.zAxis, viewTransform.linearTransform.xAxis );
+	viewTransform.translation = eye;
+}
+
 void Camera::SetupOpenGLViewingMatrices( void )
 {
 	GLint viewport[4];
@@ -61,18 +91,8 @@ void Camera::SetupOpenGLViewingMatrices( void )
 	glLoadIdentity();
 	gluPerspective( viewAngle * 180.0 / M_PI, aspectRatio, 0.1, 1000.0 );
 
-	_3DMath::Vector subjectLocation( 0.0, 0.0, 0.0 );
-	if( subject )
-		subject->GetLocation( subjectLocation );
-
-	_3DMath::Vector eye, up;
-
-	eye.x = cos( theta ) * cos( phi );
-	eye.y = sin( phi );
-	eye.z = sin( theta ) * cos( phi );
-	eye.Scale( distanceToSubject );
-
-	up.Set( 0.0, 1.0, 0.0 );
+	_3DMath::Vector eye, subjectLocation, up;
+	GetViewParameters( eye, subjectLocation, up );
 
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();

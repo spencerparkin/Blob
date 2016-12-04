@@ -14,6 +14,8 @@ public:
 	Frame( void );
 	virtual ~Frame( void );
 
+	Canvas* GetCanvas( void ) { return canvas; }
+
 private:
 
 	enum

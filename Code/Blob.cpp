@@ -2,12 +2,19 @@
 
 #include "Blob.h"
 #include "Texture.h"
+#include "Controller.h"
+#include "Camera.h"
+#include "Application.h"
+#include "Frame.h"
+#include "Canvas.h"
 
 using namespace _3DMath;
 
 Blob::Blob( void )
 {
 	texture = nullptr;
+
+	maxTorque = 50.0;
 }
 
 /*virtual*/ Blob::~Blob( void )
@@ -26,10 +33,29 @@ void Blob::Render( _3DMath::Renderer& renderer )
 	texture->Bind();
 
 	renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
+
+	//renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
 }
 
 void Blob::Simulate( double currentTime )
 {
+	Controller* controller = wxGetApp().controller;
+	Camera* camera = wxGetApp().frame->GetCanvas()->GetCamera();
+
+	double triggerValue;
+	controller->GetAnalogTrigger( Controller::RIGHT_SIDE, triggerValue );
+	if( triggerValue > 0.0 )
+	{
+		_3DMath::AffineTransform viewTransform;
+		camera->GetViewTransform( viewTransform );
+
+		ParticleSystem::TorqueForce* torqueForce = new ParticleSystem::TorqueForce( &particleSystem );
+		double torqueMag = maxTorque * triggerValue;
+		torqueForce->torque.SetScaled( viewTransform.linearTransform.xAxis, torqueMag );
+		torqueForce->transient = true;
+		particleSystem.forceCollection.AddObject( torqueForce );
+	}
+
 	particleSystem.Simulate( currentTime );
 }
 
@@ -115,6 +141,8 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 	TriangleMesh::EdgeSet edgeSet;
 	triangleMesh.GenerateEdgeSet( edgeSet );
 
+	double stiffness = 50.0;
+
 	for( TriangleMesh::EdgeSet::iterator iter = edgeSet.begin(); iter != edgeSet.end(); iter++ )
 	{
 		uint64_t edgePair = *iter;
@@ -122,7 +150,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 		int index0, index1;
 		TriangleMesh::GetEdgePair( edgePair, index0, index1 );
 
-		MakeSpring( index0, index1, particleIds, 1000.0 );
+		MakeSpring( index0, index1, particleIds, stiffness );
 	}
 
 	edgeSet.clear();
@@ -143,7 +171,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 			TriangleMesh::EdgeSet::iterator iter = edgeSet.find( edgePair );
 			if( iter == edgeSet.end() )
 			{
-				MakeSpring( i, j, particleIds, 1000.0 );
+				MakeSpring( i, j, particleIds, stiffness * 2 );
 				edgeSet.insert( edgePair );
 			}
 		}
@@ -153,12 +181,9 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 	gravityForce->accelDueToGravity.Set( 0.0, -9.8, 0.0 );
 	particleSystem.forceCollection.AddObject( gravityForce );
 
-	ParticleSystem::ResistanceForce* resistanceForce = new ParticleSystem::ResistanceForce( &particleSystem );
-	resistanceForce->resistance = 0.95;
-	particleSystem.forceCollection.AddObject( resistanceForce );
-
 	ParticleSystem::CollisionPlane* collisionPlane = new ParticleSystem::CollisionPlane();
-	collisionPlane->plane.SetCenterAndNormal( Vector( 0.0, -2.0, 0.0 ), Vector( 0.0, 1.0, 0.0 ) );
+	collisionPlane->plane.SetCenterAndNormal( Vector( 0.0, -2.5, 0.0 ), Vector( 0.0, 1.0, 0.0 ) );
+	collisionPlane->friction = 1.0;
 	particleSystem.collisionObjectCollection.AddObject( collisionPlane );
 }
 

@@ -17,6 +17,7 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	context = nullptr;
 	renderer = new GLRenderer();
 	camera = new Camera();
+	camera->subject = wxGetApp().blob;
 
 	Bind( wxEVT_PAINT, &Canvas::OnPaint, this );
 	Bind( wxEVT_SIZE, &Canvas::OnSize, this );

@@ -39,6 +39,8 @@ private:
 
 	_3DMath::ParticleSystem particleSystem;
 	_3DMath::TriangleMesh triangleMesh;
+
+	double maxTorque;
 };
 
 // Blob.h

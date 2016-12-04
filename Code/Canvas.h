@@ -18,6 +18,8 @@ public:
 
 	void Advance( void );
 
+	Camera* GetCamera( void ) { return camera; }
+
 private:
 
 	void OnPaint( wxPaintEvent& event );

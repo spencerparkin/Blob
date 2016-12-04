@@ -3,6 +3,7 @@
 #pragma once
 
 #include <Vector.h>
+#include <AffineTransform.h>
 
 class Camera
 {
@@ -19,6 +20,9 @@ public:
 
 	void Update( double currentTime );
 	void SetupOpenGLViewingMatrices( void );
+
+	void GetViewParameters( _3DMath::Vector& eye, _3DMath::Vector& subjectLocation, _3DMath::Vector& up ) const;
+	void GetViewTransform( _3DMath::AffineTransform& viewTransform ) const;
 
 	Subject* subject;
 	double distanceToSubject;
