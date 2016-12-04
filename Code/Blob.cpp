@@ -28,6 +28,11 @@ void Blob::Render( _3DMath::Renderer& renderer )
 	renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
 }
 
+void Blob::Simulate( double currentTime )
+{
+	particleSystem.Simulate( currentTime );
+}
+
 /*virtual*/ void Blob::GetLocation( _3DMath::Vector& location ) const
 {
 	location = particleSystem.centerOfMass;
@@ -91,7 +96,6 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 	}
 
 	triangleMesh.FindConvexHull();
-	triangleMesh.SubdivideAllTriangles( radius );
 	triangleMesh.CalculateNormals();
 	triangleMesh.CalculateSphericalUVs();
 
@@ -118,7 +122,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 		int index0, index1;
 		TriangleMesh::GetEdgePair( edgePair, index0, index1 );
 
-		MakeSpring( index0, index1, particleIds, 1.0 );
+		MakeSpring( index0, index1, particleIds, 1000.0 );
 	}
 
 	edgeSet.clear();
@@ -139,11 +143,23 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 			TriangleMesh::EdgeSet::iterator iter = edgeSet.find( edgePair );
 			if( iter == edgeSet.end() )
 			{
-				MakeSpring( i, j, particleIds, 1.0 );
+				MakeSpring( i, j, particleIds, 1000.0 );
 				edgeSet.insert( edgePair );
 			}
 		}
 	}
+
+	ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
+	gravityForce->accelDueToGravity.Set( 0.0, -9.8, 0.0 );
+	particleSystem.forceCollection.AddObject( gravityForce );
+
+	ParticleSystem::ResistanceForce* resistanceForce = new ParticleSystem::ResistanceForce( &particleSystem );
+	resistanceForce->resistance = 0.95;
+	particleSystem.forceCollection.AddObject( resistanceForce );
+
+	ParticleSystem::CollisionPlane* collisionPlane = new ParticleSystem::CollisionPlane();
+	collisionPlane->plane.SetCenterAndNormal( Vector( 0.0, -2.0, 0.0 ), Vector( 0.0, 1.0, 0.0 ) );
+	particleSystem.collisionObjectCollection.AddObject( collisionPlane );
 }
 
 void Blob::AddVertexPair( const Vector& vector )

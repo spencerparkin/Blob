@@ -44,6 +44,8 @@ void Canvas::Advance( void )
 	double currentTime = wxGetLocalTimeMillis().ToDouble() - baseTime;
 
 	camera->Update( currentTime );
+
+	wxGetApp().blob->Simulate( currentTime );
 }
 
 void Canvas::OnPaint( wxPaintEvent& event )

@@ -17,6 +17,7 @@ public:
 	virtual ~Blob( void );
 
 	void Render( _3DMath::Renderer& renderer );
+	void Simulate( double currentTime );
 
 	enum Polyhedron
 	{

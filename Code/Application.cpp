@@ -43,7 +43,7 @@ Application::Application( void )
 	}
 
 	blob = new Blob();
-	blob->MakePolyhedron( Blob::ICOSAHEDRON );
+	blob->MakePolyhedron( Blob::HEXADRON );
 
 	frame = new Frame();
 	frame->Show();
