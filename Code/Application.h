@@ -5,8 +5,8 @@
 #include <wx/app.h>
 
 class Frame;
-class Blob;
 class Controller;
+class Race;
 
 class Application : public wxApp
 {
@@ -18,8 +18,8 @@ public:
 	virtual bool OnInit( void ) override;
 
 	Frame* frame;
-	Blob* blob;
 	Controller* controller;
+	Race* race;
 };
 
 wxDECLARE_APP( Application );

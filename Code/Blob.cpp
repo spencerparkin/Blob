@@ -2,17 +2,14 @@
 
 #include "Blob.h"
 #include "Texture.h"
-#include "Controller.h"
-#include "Camera.h"
-#include "Application.h"
-#include "Frame.h"
-#include "Canvas.h"
+#include "Driver.h"
 
 using namespace _3DMath;
 
 Blob::Blob( void )
 {
 	texture = nullptr;
+	driver = nullptr;
 
 	maxTorque = 50.0;
 }
@@ -20,6 +17,7 @@ Blob::Blob( void )
 /*virtual*/ Blob::~Blob( void )
 {
 	delete texture;
+	delete driver;
 }
 
 void Blob::Render( _3DMath::Renderer& renderer )
@@ -39,22 +37,8 @@ void Blob::Render( _3DMath::Renderer& renderer )
 
 void Blob::Simulate( double currentTime )
 {
-	Controller* controller = wxGetApp().controller;
-	Camera* camera = wxGetApp().frame->GetCanvas()->GetCamera();
-
-	double triggerValue;
-	controller->GetAnalogTrigger( Controller::RIGHT_SIDE, triggerValue );
-	if( triggerValue > 0.0 )
-	{
-		_3DMath::AffineTransform viewTransform;
-		camera->GetViewTransform( viewTransform );
-
-		ParticleSystem::TorqueForce* torqueForce = new ParticleSystem::TorqueForce( &particleSystem );
-		double torqueMag = maxTorque * triggerValue;
-		torqueForce->torque.SetScaled( viewTransform.linearTransform.xAxis, torqueMag );
-		torqueForce->transient = true;
-		particleSystem.forceCollection.AddObject( torqueForce );
-	}
+	if( driver )
+		driver->Drive( this );
 
 	particleSystem.Simulate( currentTime );
 }
@@ -64,7 +48,7 @@ void Blob::Simulate( double currentTime )
 	location = particleSystem.centerOfMass;
 }
 
-void Blob::MakePolyhedron( Polyhedron polyhedron )
+void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide )
 {
 	triangleMesh.Clear();
 	particleSystem.Clear();
@@ -122,6 +106,10 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 	}
 
 	triangleMesh.FindConvexHull();
+
+	if( subDivide )
+		triangleMesh.SubdivideAllTriangles( radius );
+
 	triangleMesh.CalculateNormals();
 	triangleMesh.CalculateSphericalUVs();
 
@@ -141,7 +129,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 	TriangleMesh::EdgeSet edgeSet;
 	triangleMesh.GenerateEdgeSet( edgeSet );
 
-	double stiffness = 50.0;
+	double stiffness = 100.0;
 
 	for( TriangleMesh::EdgeSet::iterator iter = edgeSet.begin(); iter != edgeSet.end(); iter++ )
 	{
@@ -171,7 +159,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron )
 			TriangleMesh::EdgeSet::iterator iter = edgeSet.find( edgePair );
 			if( iter == edgeSet.end() )
 			{
-				MakeSpring( i, j, particleIds, stiffness * 2 );
+				MakeSpring( i, j, particleIds, stiffness );
 				edgeSet.insert( edgePair );
 			}
 		}

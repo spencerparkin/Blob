@@ -2,21 +2,21 @@
 
 #include "Application.h"
 #include "Frame.h"
-#include "Blob.h"
 #include "Controller.h"
+#include "Race.h"
 #include <wx/image.h>
 
 Application::Application( void )
 {
 	frame = nullptr;
-	blob = nullptr;
 	controller = nullptr;
+	race = nullptr;
 }
 
 /*virtual*/ Application::~Application( void )
 {
-	delete blob;
 	delete controller;
+	delete race;
 }
 
 /*virtual*/ bool Application::OnInit( void )
@@ -42,8 +42,7 @@ Application::Application( void )
 		}
 	}
 
-	blob = new Blob();
-	blob->MakePolyhedron( Blob::ICOSAHEDRON );
+	race = new Race();
 
 	frame = new Frame();
 	frame->Show();

@@ -1,8 +1,8 @@
 // Camera.cpp
 
 #include "Camera.h"
-#include "Application.h"
 #include "Controller.h"
+#include "Application.h"
 #include <wx/glcanvas.h>
 #include <gl/GLU.h>
 
@@ -13,10 +13,6 @@ Camera::Camera( void )
 	theta = 0.0;
 	phi = 0.0;
 	viewAngle = M_PI / 3.0;
-	lastUpdateTime = 0.0;
-	zoomRate = 0.01;
-	thetaChangeRate = M_PI / 2000.0;
-	phiChangeRate = M_PI / 2000.0;
 }
 
 /*virtual*/ Camera::~Camera( void )
@@ -25,31 +21,8 @@ Camera::Camera( void )
 
 void Camera::Update( double currentTime )
 {
-	double deltaTime = 0.0;
-	if( lastUpdateTime != 0.0 )
-		deltaTime = currentTime - lastUpdateTime;
-	if( deltaTime > 100.0 )
-		deltaTime = 100.0;
-	lastUpdateTime = currentTime;
-
-	Controller* controller = wxGetApp().controller;
-
-	// TODO: Probably need to revisit this and rework the design.  There's surely a better way to control the camera.
-
-	double zoomDelta = 0.0;
-	if( controller->ButtonDown( Controller::BUTTON_L_SHOULDER ) )
-		zoomDelta += zoomRate * deltaTime;
-	if( controller->ButtonDown( Controller::BUTTON_R_SHOULDER ) )
-		zoomDelta -= zoomRate * deltaTime;
-
-	distanceToSubject += zoomDelta;
-
-	_3DMath::Vector unitDir;
-	double mag;
-	controller->GetAnalogJoyStick( Controller::LEFT_SIDE, unitDir, mag );
-
-	theta += thetaChangeRate * deltaTime * unitDir.x * mag;
-	phi += phiChangeRate * deltaTime * unitDir.y * mag;
+	// TODO: If in free-cam mode, use the controller to free-cam around.
+	//       If in follow mode, follow the configured subject.
 }
 
 void Camera::GetViewParameters( _3DMath::Vector& eye, _3DMath::Vector& subjectLocation, _3DMath::Vector& up ) const

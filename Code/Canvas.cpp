@@ -3,7 +3,7 @@
 #include "Canvas.h"
 #include "Application.h"
 #include "GLRenderer.h"
-#include "Blob.h"
+#include "Race.h"
 #include "Camera.h"
 #include "Controller.h"
 #include <wx/time.h>
@@ -17,7 +17,6 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	context = nullptr;
 	renderer = new GLRenderer();
 	camera = new Camera();
-	camera->subject = wxGetApp().blob;
 
 	Bind( wxEVT_PAINT, &Canvas::OnPaint, this );
 	Bind( wxEVT_SIZE, &Canvas::OnSize, this );
@@ -46,7 +45,7 @@ void Canvas::Advance( void )
 
 	camera->Update( currentTime );
 
-	wxGetApp().blob->Simulate( currentTime );
+	wxGetApp().race->Simulate( currentTime );
 }
 
 void Canvas::OnPaint( wxPaintEvent& event )
@@ -62,7 +61,7 @@ void Canvas::OnPaint( wxPaintEvent& event )
 
 	camera->SetupOpenGLViewingMatrices();
 
-	wxGetApp().blob->Render( *renderer );
+	wxGetApp().race->Render( *renderer );
 
 	glFlush();
 

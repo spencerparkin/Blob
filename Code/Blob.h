@@ -8,6 +8,7 @@
 #include "Camera.h"
 
 class Texture;
+class Driver;
 
 class Blob : public Camera::Subject
 {
@@ -26,9 +27,12 @@ public:
 		DODECAHEDRON,
 	};
 
-	void MakePolyhedron( Polyhedron polyhedron );
+	void MakePolyhedron( Polyhedron polyhedron, bool subDivide );
 
 	virtual void GetLocation( _3DMath::Vector& location ) const override;
+
+	Driver* driver;
+	double maxTorque;
 
 private:
 
@@ -39,8 +43,8 @@ private:
 
 	_3DMath::ParticleSystem particleSystem;
 	_3DMath::TriangleMesh triangleMesh;
-
-	double maxTorque;
 };
+
+typedef std::list< Blob* > BlobList;
 
 // Blob.h

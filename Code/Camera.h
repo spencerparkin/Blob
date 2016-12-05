@@ -28,10 +28,6 @@ public:
 	double distanceToSubject;
 	double theta, phi;
 	double viewAngle;
-	double lastUpdateTime;
-	double zoomRate;
-	double thetaChangeRate;
-	double phiChangeRate;
 };
 
 // Camera.h
