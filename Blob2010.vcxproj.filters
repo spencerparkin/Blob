@@ -31,6 +31,18 @@
     <ClCompile Include="Code\Texture.cpp">
       <Filter>Code</Filter>
     </ClCompile>
+    <ClCompile Include="Code\ComputerDriver.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\HumanDriver.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Race.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Driver.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -55,6 +67,18 @@
       <Filter>Code</Filter>
     </ClInclude>
     <ClInclude Include="Code\Texture.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ComputerDriver.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\HumanDriver.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Race.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Driver.h">
       <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>

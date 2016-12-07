@@ -7,6 +7,8 @@
 #include <TriangleMesh.h>
 #include <Renderer.h>
 
+class Texture;
+
 class Race
 {
 public:
@@ -25,8 +27,9 @@ private:
 	void DeleteBlobList( void );
 
 	BlobList blobList;
-
 	_3DMath::TriangleMesh raceTrackMesh;
+	Texture* raceTrackMeshTexture;
+	int laps;
 };
 
 // Race.h

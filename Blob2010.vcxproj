@@ -81,9 +81,13 @@
     <ClCompile Include="Code\Blob.cpp" />
     <ClCompile Include="Code\Camera.cpp" />
     <ClCompile Include="Code\Canvas.cpp" />
+    <ClCompile Include="Code\ComputerDriver.cpp" />
     <ClCompile Include="Code\Controller.cpp" />
+    <ClCompile Include="Code\Driver.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
+    <ClCompile Include="Code\HumanDriver.cpp" />
+    <ClCompile Include="Code\Race.cpp" />
     <ClCompile Include="Code\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -91,9 +95,13 @@
     <ClInclude Include="Code\Blob.h" />
     <ClInclude Include="Code\Camera.h" />
     <ClInclude Include="Code\Canvas.h" />
+    <ClInclude Include="Code\ComputerDriver.h" />
     <ClInclude Include="Code\Controller.h" />
+    <ClInclude Include="Code\Driver.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
+    <ClInclude Include="Code\HumanDriver.h" />
+    <ClInclude Include="Code\Race.h" />
     <ClInclude Include="Code\Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
