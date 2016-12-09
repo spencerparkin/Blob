@@ -1,0 +1,8 @@
+<Track>
+	<StartingLine>
+	</StartingLine>
+	<CheckPoints>
+	</CheckPoints>
+	<Laps>3</Laps>
+	<Mesh texture="Track1.png" geometry="Track1.ply"/>
+</Track>

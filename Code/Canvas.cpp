@@ -39,6 +39,12 @@ void Canvas::BindContext( void )
 
 void Canvas::Advance( void )
 {
+	if( !wxGetApp().race )
+	{
+		wxGetApp().race = new Race();
+		wxGetApp().race->Load( "Data/Track1.xml" );
+	}
+
 	wxGetApp().controller->UpdateState();
 
 	double currentTime = wxGetLocalTimeMillis().ToDouble() - baseTime;
@@ -50,9 +56,9 @@ void Canvas::Advance( void )
 
 void Canvas::OnPaint( wxPaintEvent& event )
 {
-	Advance();
-
 	BindContext();
+
+	Advance();
 
 	glClearColor( 0.f, 0.f, 0.f, 1.f );
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );

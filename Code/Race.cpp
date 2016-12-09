@@ -51,14 +51,21 @@ bool Race::Load( const wxString& raceFile )
 	{
 		if( xmlNode->GetName() == "Mesh" )
 		{
-			wxString meshData = xmlNode->GetChildren()->GetContent();
+			wxString geometryFile = xmlNode->GetAttribute( "geometry" );
+			if( geometryFile.IsEmpty() )
+				return false;
+
+			wxString meshData;
+			wxFile file( "Data/" + geometryFile );
+			if( !file.ReadAll( &meshData ) )
+				return false;
 
 			std::stringstream meshDataStream;
 			meshDataStream << meshData.c_str();
 
-			_3DMath::PlyFormat* plyFormat = new _3DMath::PlyFormat();
-			bool meshLoaded = plyFormat->LoadTriangleMesh( raceTrackMesh, meshDataStream );
-			delete plyFormat;
+			_3DMath::FileFormat* format = _3DMath::FileFormat::CreateForFile( ( const char* )geometryFile.c_str() );
+			bool meshLoaded = format->LoadTriangleMesh( raceTrackMesh, meshDataStream );
+			delete format;
 			if( !meshLoaded )
 				return false;
 
@@ -68,7 +75,7 @@ bool Race::Load( const wxString& raceFile )
 				if( !textureFile.IsEmpty() )
 				{
 					raceTrackMeshTexture = new Texture();
-					if( !raceTrackMeshTexture->Load( textureFile ) )
+					if( !raceTrackMeshTexture->Load( "Data/" + textureFile ) )
 						return false;
 				}
 			}

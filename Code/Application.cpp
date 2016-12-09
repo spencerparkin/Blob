@@ -42,9 +42,6 @@ Application::Application( void )
 		}
 	}
 
-	race = new Race();
-	race->Load( "Tracks/Track1.xml" );
-
 	frame = new Frame();
 	frame->Show();
 
