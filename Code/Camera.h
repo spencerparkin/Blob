@@ -21,13 +21,20 @@ public:
 	void Update( double currentTime );
 	void SetupOpenGLViewingMatrices( void );
 
-	void GetViewParameters( _3DMath::Vector& eye, _3DMath::Vector& subjectLocation, _3DMath::Vector& up ) const;
-	void GetViewTransform( _3DMath::AffineTransform& viewTransform ) const;
+	enum Mode
+	{
+		MODE_FREE_CAM,
+		MODE_FOLLOW_SUBJECT,
+	};
 
+	Mode mode;
 	Subject* subject;
-	double distanceToSubject;
-	double theta, phi;
+	double followingDistance;
 	double viewAngle;
+	_3DMath::AffineTransform viewTransform;
+	double maxStrafeSpeed;
+	double maxRotateSpeed;
+	double lastTime;
 };
 
 // Camera.h
