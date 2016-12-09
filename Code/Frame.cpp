@@ -36,11 +36,14 @@ Frame::Frame( void ) : wxFrame( 0, wxID_ANY, "Blob", wxDefaultPosition, wxSize( 
 
 void Frame::OnExit( wxCommandEvent& event )
 {
+	timer.Stop();
+
 	Close( true );
 }
 
 void Frame::OnTimer( wxTimerEvent& event )
 {
+	// It shouldn't hurt to call this more often than is needed.
 	canvas->Refresh();
 }
 
