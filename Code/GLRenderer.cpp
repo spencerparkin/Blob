@@ -39,6 +39,7 @@ GLRenderer::GLRenderer( void )
 {
 	glTexCoord2d( vertex.u, vertex.v );
 	glNormal3d( vertex.normal.x, vertex.normal.y, vertex.normal.z );
+	glColor4d( vertex.color.x, vertex.color.y, vertex.color.z, vertex.alpha );
 	glVertex3d( vertex.position.x, vertex.position.y, vertex.position.z );
 }
 
