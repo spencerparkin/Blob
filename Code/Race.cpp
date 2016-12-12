@@ -109,11 +109,11 @@ bool Race::Unload( void )
 
 void Race::Render( _3DMath::Renderer& renderer )
 {
-	//if( raceTrackMeshTexture )
-	//	raceTrackMeshTexture->Bind();
+	if( raceTrackMeshTexture )
+		raceTrackMeshTexture->Bind();
 
-	renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
-	glColor3f( 1.f, 1.f, 1.f );
+	//renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
+	//glColor3f( 1.f, 1.f, 1.f );
 
 	renderer.DrawTriangleMesh( raceTrackMesh );
 

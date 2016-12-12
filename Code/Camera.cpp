@@ -13,7 +13,7 @@ Camera::Camera( void )
 	followingDistance = 10.0;
 	viewAngle = M_PI / 3.0;
 	viewTransform.linearTransform.Identity();
-	viewTransform.translation.Set( 0.0, 0.0, 10.0 );
+	viewTransform.translation.Set( 0.0, 5.0, 10.0 );
 	maxStrafeSpeed = 20.0;
 	maxRotateSpeed = M_PI / 3.0;
 	lastTime = 0.0;

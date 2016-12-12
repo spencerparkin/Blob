@@ -4,5 +4,5 @@
 	<CheckPoints>
 	</CheckPoints>
 	<Laps>3</Laps>
-	<Mesh texture="Track1.png" geometry="Track1.ply"/>
+	<Mesh texture="Track1.png" geometry="Track1.obj"/>
 </Track>
