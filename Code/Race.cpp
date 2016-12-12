@@ -12,6 +12,7 @@ Race::Race( void )
 	laps = 0;
 
 	raceTrackMeshTexture = nullptr;
+	boxTree = nullptr;
 }
 
 /*virtual*/ Race::~Race( void )
@@ -79,6 +80,21 @@ bool Race::Load( const wxString& raceFile )
 						return false;
 				}
 			}
+
+			if( !boxTree )
+			{
+				_3DMath::AxisAlignedBox boundingBox;
+				if( raceTrackMesh.GenerateBoundingBox( boundingBox ) )
+				{
+					boxTree = new _3DMath::BoundingBoxTree();
+					boxTree->GenerateNodes( boundingBox, 5 );
+
+					_3DMath::TriangleList triangleList;
+					raceTrackMesh.GenerateTriangleList( triangleList );
+
+					//boxTree->InsertTriangleList( triangleList );
+				}
+			}
 		}
 		else if( xmlNode->GetName() == "Laps" )
 		{
@@ -104,6 +120,9 @@ bool Race::Unload( void )
 	delete raceTrackMeshTexture;
 	raceTrackMeshTexture = nullptr;
 
+	delete boxTree;
+	boxTree = nullptr;
+
 	return true;
 }
 
@@ -117,10 +136,18 @@ void Race::Render( _3DMath::Renderer& renderer )
 
 	renderer.DrawTriangleMesh( raceTrackMesh );
 
+	glDisable( GL_TEXTURE_2D );
+
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
 		Blob* blob = *iter;
 		blob->Render( renderer );
+	}
+
+	if( boxTree )
+	{
+		glColor3f( 1.f, 1.f, 1.f );
+		renderer.DrawBoundingBoxTree( *boxTree );
 	}
 }
 

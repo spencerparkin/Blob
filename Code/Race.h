@@ -6,6 +6,7 @@
 #include "Blob.h"
 #include <TriangleMesh.h>
 #include <Renderer.h>
+#include <BoundingBoxTree.h>
 
 class Texture;
 
@@ -29,6 +30,7 @@ private:
 	BlobList blobList;
 	_3DMath::TriangleMesh raceTrackMesh;
 	Texture* raceTrackMeshTexture;
+	_3DMath::BoundingBoxTree* boxTree;
 	int laps;
 };
 
