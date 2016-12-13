@@ -200,14 +200,14 @@ unsigned char KeyboardMouseController::MapButtonToKeyboardKey( int button )
 		case BUTTON_B:				return ( unsigned char )WXK_CONTROL_B;
 		case BUTTON_X:				return ( unsigned char )WXK_CONTROL_X;
 		case BUTTON_Y:				return ( unsigned char )WXK_CONTROL_Y;
-		case BUTTON_DPAD_UP:		return ( unsigned char )WXK_NUMPAD8;
-		case BUTTON_DPAD_DN:		return ( unsigned char )WXK_NUMPAD2;
-		case BUTTON_DPAD_LF:		return ( unsigned char )WXK_NUMPAD4;
-		case BUTTON_DPAD_RT:		return ( unsigned char )WXK_NUMPAD6;
-		case BUTTON_L_SHOULDER:		return ( unsigned char )WXK_PAGEDOWN;
-		case BUTTON_R_SHOULDER:		return ( unsigned char )WXK_PAGEUP;
-		case BUTTON_BACK:			return ( unsigned char )WXK_HOME;
-		case BUTTON_START:			return ( unsigned char )WXK_END;
+		case BUTTON_DPAD_UP:		return ( unsigned char )WXK_HOME;
+		case BUTTON_DPAD_DN:		return ( unsigned char )WXK_END;
+		case BUTTON_DPAD_LF:		return ( unsigned char )WXK_DELETE;
+		case BUTTON_DPAD_RT:		return ( unsigned char )WXK_PAGEDOWN;
+		case BUTTON_L_SHOULDER:		return ( unsigned char )WXK_NUMPAD7;
+		case BUTTON_R_SHOULDER:		return ( unsigned char )WXK_NUMPAD9;
+		case BUTTON_BACK:			return ( unsigned char )'B';
+		case BUTTON_START:			return ( unsigned char )'S';
 		case BUTTON_L_THUMB:		return ( unsigned char )WXK_CONTROL_L;
 		case BUTTON_R_THUMB:		return ( unsigned char )WXK_CONTROL_R;
 	}
@@ -232,9 +232,9 @@ unsigned char KeyboardMouseController::MapButtonToKeyboardKey( int button )
 {
 	bool keyDown = false;
 	if( side == LEFT_SIDE )
-		keyDown = wxGetKeyState( WXK_NUMPAD7 );
+		keyDown = wxGetKeyState( WXK_NUMPAD1 );
 	else if( side == RIGHT_SIDE )
-		keyDown = wxGetKeyState( WXK_NUMPAD9 );
+		keyDown = wxGetKeyState( WXK_NUMPAD3 );
 	value = keyDown ? 1.0 : 0.0;
 }
 
@@ -245,7 +245,9 @@ unsigned char KeyboardMouseController::MapButtonToKeyboardKey( int button )
 	_3DMath::Vector xAxis( 1.0, 0.0, 0.0 );
 	_3DMath::Vector yAxis( 0.0, 1.0, 0.0 );
 
-	if( side == LEFT_SIDE )
+	bool controlDown = wxGetKeyState( WXK_CONTROL );
+
+	if( ( side == LEFT_SIDE && !controlDown ) || ( side == RIGHT_SIDE && controlDown ) )
 	{
 		if( wxGetKeyState( WXK_UP ) )
 			unitDir.Add( yAxis );
@@ -255,9 +257,6 @@ unsigned char KeyboardMouseController::MapButtonToKeyboardKey( int button )
 			unitDir.Add( xAxis );
 		if( wxGetKeyState( WXK_LEFT ) )
 			unitDir.Subtract( xAxis );
-	}
-	else if( side == RIGHT_SIDE )
-	{
 	}
 
 	mag = unitDir.Length();

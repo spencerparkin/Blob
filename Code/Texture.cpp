@@ -49,6 +49,9 @@ bool Texture::Load( const wxString& texFile )
 
 	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->GetWidth(), image->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, texData );
 
+	delete image;
+	image = nullptr;
+
 	return true;
 }
 

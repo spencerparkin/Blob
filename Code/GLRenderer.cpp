@@ -22,6 +22,7 @@ GLRenderer::GLRenderer( void )
 		case DRAW_MODE_TRIANGLES:		mode = GL_TRIANGLES;		break;
 		case DRAW_MODE_QUADS:			mode = GL_QUADS;			break;
 		case DRAW_MODE_LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case DRAW_MODE_LINE_LOOP:		mode = GL_LINE_LOOP;		break;
 		case DRAW_MODE_TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
 		case DRAW_MODE_TRIANGLE_FAN:	mode = GL_TRIANGLE_FAN;		break;
 		case DRAW_MODE_QUAD_STRIP:		mode = GL_QUAD_STRIP;		break;

@@ -92,7 +92,8 @@ bool Race::Load( const wxString& raceFile )
 					_3DMath::TriangleList triangleList;
 					raceTrackMesh.GenerateTriangleList( triangleList );
 
-					//boxTree->InsertTriangleList( triangleList );
+					if( !boxTree->InsertTriangleList( triangleList ) )
+						return false;
 				}
 			}
 		}
@@ -134,7 +135,7 @@ void Race::Render( _3DMath::Renderer& renderer )
 	//renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
 	//glColor3f( 1.f, 1.f, 1.f );
 
-	renderer.DrawTriangleMesh( raceTrackMesh );
+	//renderer.DrawTriangleMesh( raceTrackMesh );
 
 	glDisable( GL_TEXTURE_2D );
 
@@ -146,8 +147,8 @@ void Race::Render( _3DMath::Renderer& renderer )
 
 	if( boxTree )
 	{
-		glColor3f( 1.f, 1.f, 1.f );
-		//renderer.DrawBoundingBoxTree( *boxTree );
+		renderer.random.Seed(0);
+		renderer.DrawBoundingBoxTree( *boxTree, _3DMath::Renderer::DRAW_BOXES | _3DMath::Renderer::DRAW_TRIANGLES );
 	}
 }
 
