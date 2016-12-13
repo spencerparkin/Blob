@@ -7,6 +7,7 @@ Texture::Texture( void )
 {
 	texName = GL_INVALID_VALUE;
 	image = nullptr;
+	texData = nullptr;
 }
 
 /*virtual*/ Texture::~Texture( void )
@@ -34,8 +35,19 @@ bool Texture::Load( const wxString& texFile )
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
 
-	const unsigned char* imageData = image->GetData();
-	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->GetWidth(), image->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, imageData );
+	const GLubyte* imageData = image->GetData();
+
+	GLuint componentsPerPixel = 3;
+	GLuint imageDataSize = image->GetWidth() * image->GetHeight() * sizeof( GLubyte ) * componentsPerPixel;
+	texData = new GLubyte[ imageDataSize ];
+
+	// Unfortunately, we have to flip the image.
+	for( int i = 0; i < image->GetWidth(); i++ )
+		for( int j = 0; j < image->GetHeight(); j++ )
+			for( int k = 0; k < ( signed )componentsPerPixel; k++ )
+				texData[ ( j * image->GetWidth() + i ) * componentsPerPixel + k ] = imageData[ ( ( image->GetHeight() - 1 - j ) * image->GetWidth() + i ) * componentsPerPixel + k ];
+
+	glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, image->GetWidth(), image->GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, texData );
 
 	return true;
 }
@@ -52,6 +64,12 @@ bool Texture::Unload( void )
 	{
 		delete image;
 		image = nullptr;
+	}
+
+	if( texData )
+	{
+		delete[] texData;
+		texData = nullptr;
 	}
 
 	return true;

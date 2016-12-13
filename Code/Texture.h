@@ -20,6 +20,7 @@ private:
 
 	GLuint texName;
 	wxImage* image;
+	GLubyte* texData;
 };
 
 // Texture.h

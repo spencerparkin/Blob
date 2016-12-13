@@ -147,7 +147,7 @@ void Race::Render( _3DMath::Renderer& renderer )
 	if( boxTree )
 	{
 		glColor3f( 1.f, 1.f, 1.f );
-		renderer.DrawBoundingBoxTree( *boxTree );
+		//renderer.DrawBoundingBoxTree( *boxTree );
 	}
 }
 
