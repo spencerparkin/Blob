@@ -84,6 +84,7 @@ void Camera::Update( double currentTime )
 			_3DMath::AffineTransform targetTransform;
 			subject->GetLocation( targetTransform.translation );
 
+			// TODO: Track last move direction of subject and use that instead of this to build our frame.
 			_3DMath::Vector targetToCamera;
 			targetToCamera.Subtract( viewTransform.translation, targetTransform.translation );
 
