@@ -118,6 +118,9 @@ bool Race::Load( const wxString& raceFile )
 	blob->MakePolyhedron( Blob::ICOSAHEDRON, false, affineTransform );
 	blobList.push_back( blob );
 
+	// TODO: Load spline data from XML.  This can be used to determine laps
+	//       and keep AI blobs on track.
+
 	return true;
 }
 
