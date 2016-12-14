@@ -27,7 +27,7 @@ public:
 		DODECAHEDRON,
 	};
 
-	void MakePolyhedron( Polyhedron polyhedron, bool subDivide );
+	void MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath::AffineTransform& transform );
 
 	virtual void GetLocation( _3DMath::Vector& location ) const override;
 

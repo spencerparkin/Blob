@@ -2,6 +2,7 @@
 
 #include "Race.h"
 #include "Texture.h"
+#include "Blob.h"
 #include <FileFormat.h>
 #include <wx/xml/xml.h>
 #include <wx/wfstream.h>
@@ -109,6 +110,14 @@ bool Race::Load( const wxString& raceFile )
 		}
 	}
 
+	// TODO: Get this from the XML file and create blobs from XML file.
+	_3DMath::AffineTransform affineTransform;
+	affineTransform.linearTransform.SetScale( 0.3 );
+
+	Blob* blob = new Blob();
+	blob->MakePolyhedron( Blob::ICOSAHEDRON, false, affineTransform );
+	blobList.push_back( blob );
+
 	return true;
 }
 
@@ -131,6 +140,9 @@ void Race::Render( _3DMath::Renderer& renderer )
 {
 	if( raceTrackMeshTexture )
 		raceTrackMeshTexture->Bind();
+
+	// TODO: It would be neat to write our own shader for drawing the track mesh
+	//       so that we could shadow the blobs based on a light source.
 
 	renderer.DrawTriangleMesh( raceTrackMesh );
 

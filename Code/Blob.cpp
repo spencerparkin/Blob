@@ -25,7 +25,7 @@ void Blob::Render( _3DMath::Renderer& renderer )
 	if( !texture )
 	{
 		texture = new Texture();
-		texture->Load( "Textures/Globe.png" );
+		texture->Load( "Data/Globe.png" );
 	}
 
 	texture->Bind();
@@ -48,7 +48,7 @@ void Blob::Simulate( double currentTime )
 	location = particleSystem.centerOfMass;
 }
 
-void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide )
+void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath::AffineTransform& transform )
 {
 	triangleMesh.Clear();
 	particleSystem.Clear();
@@ -110,6 +110,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide )
 	if( subDivide )
 		triangleMesh.SubdivideAllTriangles( radius );
 
+	triangleMesh.Transform( transform );
 	triangleMesh.CalculateNormals();
 	triangleMesh.CalculateSphericalUVs();
 
@@ -165,14 +166,9 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide )
 		}
 	}
 
-	ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
-	gravityForce->accelDueToGravity.Set( 0.0, -9.8, 0.0 );
-	particleSystem.forceCollection.AddObject( gravityForce );
-
-	ParticleSystem::CollisionPlane* collisionPlane = new ParticleSystem::CollisionPlane();
-	collisionPlane->plane.SetCenterAndNormal( Vector( 0.0, -2.5, 0.0 ), Vector( 0.0, 1.0, 0.0 ) );
-	collisionPlane->friction = 1.0;
-	particleSystem.collisionObjectCollection.AddObject( collisionPlane );
+	//ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
+	//gravityForce->accelDueToGravity.Set( 0.0, -9.8, 0.0 );
+	//particleSystem.forceCollection.AddObject( gravityForce );
 }
 
 void Blob::AddVertexPair( const Vector& vector )
