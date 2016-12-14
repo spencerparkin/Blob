@@ -132,12 +132,7 @@ void Race::Render( _3DMath::Renderer& renderer )
 	if( raceTrackMeshTexture )
 		raceTrackMeshTexture->Bind();
 
-	//renderer.drawStyle = _3DMath::Renderer::DRAW_STYLE_WIRE_FRAME;
-	//glColor3f( 1.f, 1.f, 1.f );
-
-	//renderer.DrawTriangleMesh( raceTrackMesh );
-
-	glDisable( GL_TEXTURE_2D );
+	renderer.DrawTriangleMesh( raceTrackMesh );
 
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
@@ -145,11 +140,14 @@ void Race::Render( _3DMath::Renderer& renderer )
 		blob->Render( renderer );
 	}
 
+#if 0
 	if( boxTree )
 	{
+		glDisable( GL_TEXTURE_2D );
 		renderer.random.Seed(0);
 		renderer.DrawBoundingBoxTree( *boxTree, _3DMath::Renderer::DRAW_BOXES | _3DMath::Renderer::DRAW_TRIANGLES );
 	}
+#endif
 }
 
 void Race::Simulate( double currentTime )
