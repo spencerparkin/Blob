@@ -110,9 +110,9 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 	if( subDivide )
 		triangleMesh.SubdivideAllTriangles( radius );
 
+	triangleMesh.CalculateSphericalUVs();
 	triangleMesh.Transform( transform );
 	triangleMesh.CalculateNormals();
-	triangleMesh.CalculateSphericalUVs();
 
 	std::vector< int > particleIds;
 

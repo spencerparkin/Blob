@@ -4,6 +4,7 @@
 #include "Frame.h"
 #include "Controller.h"
 #include "Race.h"
+#include "Canvas.h"
 #include <wx/image.h>
 
 Application::Application( void )
@@ -46,6 +47,11 @@ Application::Application( void )
 	frame->Show();
 
 	return true;
+}
+
+Camera* Application::GetCamera( void )
+{
+	return frame->GetCanvas()->GetCamera();
 }
 
 wxIMPLEMENT_APP( Application );

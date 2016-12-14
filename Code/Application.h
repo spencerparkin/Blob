@@ -7,6 +7,7 @@
 class Frame;
 class Controller;
 class Race;
+class Camera;
 
 class Application : public wxApp
 {
@@ -16,6 +17,8 @@ public:
 	virtual ~Application( void );
 
 	virtual bool OnInit( void ) override;
+
+	Camera* GetCamera( void );
 
 	Frame* frame;
 	Controller* controller;

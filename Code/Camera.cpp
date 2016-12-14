@@ -10,11 +10,12 @@ Camera::Camera( void )
 {
 	mode = MODE_FREE_CAM;
 	subject = nullptr;
-	followingDistance = 10.0;
+	followingDistance = 5.0;
+	hoverHeight = 2.0;
 	viewAngle = M_PI / 3.0;
 	viewTransform.linearTransform.Identity();
 	viewTransform.translation.Set( 0.0, 5.0, 10.0 );
-	maxStrafeSpeed = 20.0;
+	maxStrafeSpeed = 5.0;
 	maxRotateSpeed = M_PI / 3.0;
 	lastTime = 0.0;
 }
@@ -28,6 +29,7 @@ void Camera::Update( double currentTime )
 	if( lastTime == 0.0 )
 		lastTime = currentTime;
 	double deltaTime = ( currentTime - lastTime ) / 1000.0;
+	deltaTime = 0.017;		// debug...
 	lastTime = currentTime;
 
 	switch( mode )
@@ -76,6 +78,48 @@ void Camera::Update( double currentTime )
 		}
 		case MODE_FOLLOW_SUBJECT:
 		{
+			if( !subject )
+				break;
+
+			_3DMath::AffineTransform targetTransform;
+			subject->GetLocation( targetTransform.translation );
+
+			_3DMath::Vector targetToCamera;
+			targetToCamera.Subtract( viewTransform.translation, targetTransform.translation );
+
+			targetTransform.linearTransform.yAxis.Set( 0.0, 1.0, 0.0 );
+			targetTransform.linearTransform.zAxis.Cross( targetToCamera, targetTransform.linearTransform.yAxis );
+			targetTransform.linearTransform.zAxis.Normalize();
+			targetTransform.linearTransform.xAxis.Cross( targetTransform.linearTransform.yAxis, targetTransform.linearTransform.zAxis );
+
+			_3DMath::Vector targetCameraPosition( sqrt( followingDistance * followingDistance - hoverHeight * hoverHeight ), hoverHeight, 0.0 );
+			targetTransform.Transform( targetCameraPosition );
+
+			_3DMath::Vector cameraToDesiredLocation;
+			cameraToDesiredLocation.Subtract( targetCameraPosition, viewTransform.translation );
+			
+			double distance = cameraToDesiredLocation.Length();
+			if( distance > 0.0 )
+			{
+				double cameraMoveSpeed = 1.0 * distance;
+				double cameraMoveDistance = cameraMoveSpeed * deltaTime;
+
+				_3DMath::Vector cameraMoveDirection;
+				cameraMoveDirection.SetNormalized( cameraToDesiredLocation );
+
+				_3DMath::Vector cameraMoveDelta;
+				cameraMoveDelta.SetScaled( cameraMoveDirection, cameraMoveDistance );
+
+				viewTransform.translation.Add( cameraMoveDelta );
+			}
+
+			targetToCamera.Subtract( viewTransform.translation, targetTransform.translation );
+
+			viewTransform.linearTransform.zAxis.SetNormalized( targetToCamera );
+			viewTransform.linearTransform.xAxis.Cross( _3DMath::Vector( 0.0, 1.0, 0.0 ), viewTransform.linearTransform.zAxis );
+			viewTransform.linearTransform.xAxis.Normalize();
+			viewTransform.linearTransform.yAxis.Cross( viewTransform.linearTransform.zAxis, viewTransform.linearTransform.xAxis );
+
 			break;
 		}
 	}

@@ -30,6 +30,7 @@ public:
 	Mode mode;
 	Subject* subject;
 	double followingDistance;
+	double hoverHeight;
 	double viewAngle;
 	_3DMath::AffineTransform viewTransform;
 	double maxStrafeSpeed;

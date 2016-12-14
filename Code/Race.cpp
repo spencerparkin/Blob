@@ -3,6 +3,10 @@
 #include "Race.h"
 #include "Texture.h"
 #include "Blob.h"
+#include "HumanDriver.h"
+#include "ComputerDriver.h"
+#include "Application.h"
+#include "Camera.h"
 #include <FileFormat.h>
 #include <wx/xml/xml.h>
 #include <wx/wfstream.h>
@@ -108,15 +112,50 @@ bool Race::Load( const wxString& raceFile )
 
 			laps = ( int )lapsLong;
 		}
+		else if( xmlNode->GetName() == "Blob" )
+		{
+			Blob* blob = new Blob();
+			blobList.push_back( blob );
+
+			wxString attribStr = xmlNode->GetAttribute( "scale" );
+			double scale = 1.0;
+			attribStr.ToCDouble( &scale );
+
+			_3DMath::AffineTransform affineTransform;
+			affineTransform.linearTransform.SetScale( scale );
+
+			attribStr = xmlNode->GetAttribute( "x" );
+			attribStr.ToCDouble( &affineTransform.translation.x );
+			attribStr = xmlNode->GetAttribute( "y" );
+			attribStr.ToCDouble( &affineTransform.translation.y );
+			attribStr = xmlNode->GetAttribute( "z" );
+			attribStr.ToCDouble( &affineTransform.translation.z );
+
+			bool subDivide = false;
+			attribStr = xmlNode->GetAttribute( "subDivide" );
+			if( attribStr == "1" )
+				subDivide = true;
+
+			attribStr = xmlNode->GetAttribute( "type" );
+			if( attribStr == "icosahedron" )
+				blob->MakePolyhedron( Blob::ICOSAHEDRON, subDivide, affineTransform );
+			else if( attribStr == "dodecahedron" )
+				blob->MakePolyhedron( Blob::DODECAHEDRON, subDivide, affineTransform );
+			else if( attribStr == "hexadron" )
+				blob->MakePolyhedron( Blob::HEXADRON, subDivide, affineTransform );
+
+			attribStr = xmlNode->GetAttribute( "driver" );
+			if( attribStr == "human" )
+			{
+				blob->driver = new HumanDriver();
+				Camera* camera = wxGetApp().GetCamera();
+				camera->subject = blob;
+				camera->mode = Camera::MODE_FOLLOW_SUBJECT;
+			}
+			else if( attribStr == "computer" )
+				blob->driver = new ComputerDriver();
+		}
 	}
-
-	// TODO: Get this from the XML file and create blobs from XML file.
-	_3DMath::AffineTransform affineTransform;
-	affineTransform.linearTransform.SetScale( 0.3 );
-
-	Blob* blob = new Blob();
-	blob->MakePolyhedron( Blob::ICOSAHEDRON, false, affineTransform );
-	blobList.push_back( blob );
 
 	// TODO: Load spline data from XML.  This can be used to determine laps
 	//       and keep AI blobs on track.
