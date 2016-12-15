@@ -189,8 +189,11 @@ void Race::Render( _3DMath::Renderer& renderer )
 	if( raceTrackMeshTexture )
 		raceTrackMeshTexture->Bind();
 
-	// TODO: It would be neat to write our own shader for drawing the track mesh
-	//       so that we could shadow the blobs based on a light source.
+	// TODO: To implement track mesh self-shadowing, we would have to figure out
+	//       a way to render the scene from the light-source perspective to generate
+	//       an off-screen depth-map.  This map would then be passed to the shader
+	//       that will get used to render the mesh.  It's worth trying to figure out.
+	//       Note that this would also handle blob shadowing for us.  Look up "Framebuffer Objects."
 
 	renderer.DrawTriangleMesh( raceTrackMesh );
 
