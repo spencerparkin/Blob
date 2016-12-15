@@ -204,12 +204,12 @@ void Race::Render( _3DMath::Renderer& renderer )
 #endif
 }
 
-void Race::Simulate( double currentTime )
+void Race::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 {
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
 		Blob* blob = *iter;
-		blob->Simulate( currentTime );
+		blob->Simulate( timeKeeper );
 	}
 }
 

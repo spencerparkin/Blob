@@ -6,14 +6,11 @@
 #include "Race.h"
 #include "Camera.h"
 #include "Controller.h"
-#include <wx/time.h>
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
-	baseTime = wxGetLocalTimeMillis().ToDouble();
-
 	context = nullptr;
 	renderer = new GLRenderer();
 	camera = new Camera();
@@ -39,6 +36,8 @@ void Canvas::BindContext( void )
 
 void Canvas::Advance( void )
 {
+	timeKeeper.MarkCurrentTime();
+
 	if( !wxGetApp().race )
 	{
 		wxGetApp().race = new Race();
@@ -47,11 +46,9 @@ void Canvas::Advance( void )
 
 	wxGetApp().controller->UpdateState();
 
-	double currentTime = wxGetLocalTimeMillis().ToDouble() - baseTime;
+	camera->Update( timeKeeper );
 
-	camera->Update( currentTime );
-
-	wxGetApp().race->Simulate( currentTime );
+	wxGetApp().race->Simulate( timeKeeper );
 }
 
 void Canvas::OnPaint( wxPaintEvent& event )

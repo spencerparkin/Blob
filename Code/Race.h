@@ -7,6 +7,7 @@
 #include <TriangleMesh.h>
 #include <Renderer.h>
 #include <BoundingBoxTree.h>
+#include <TimeKeeper.h>
 
 class Texture;
 
@@ -21,7 +22,7 @@ public:
 	bool Unload( void );
 
 	void Render( _3DMath::Renderer& renderer );
-	void Simulate( double currentTime );
+	void Simulate( const _3DMath::TimeKeeper& timeKeeper );
 
 private:
 

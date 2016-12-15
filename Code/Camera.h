@@ -4,6 +4,7 @@
 
 #include <Vector.h>
 #include <AffineTransform.h>
+#include <TimeKeeper.h>
 
 class Camera
 {
@@ -18,7 +19,7 @@ public:
 		virtual void GetLocation( _3DMath::Vector& location ) const = 0;
 	};
 
-	void Update( double currentTime );
+	void Update( const _3DMath::TimeKeeper& timeKeeper );
 	void SetupOpenGLViewingMatrices( void );
 
 	enum Mode
@@ -35,7 +36,6 @@ public:
 	_3DMath::AffineTransform viewTransform;
 	double maxStrafeSpeed;
 	double maxRotateSpeed;
-	double lastTime;
 };
 
 // Camera.h

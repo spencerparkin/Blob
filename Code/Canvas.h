@@ -3,6 +3,7 @@
 #pragma once
 
 #include <wx/glcanvas.h>
+#include <TimeKeeper.h>
 
 class GLRenderer;
 class Camera;
@@ -30,7 +31,7 @@ private:
 	wxGLContext* context;
 	GLRenderer* renderer;
 	Camera* camera;
-	double baseTime;
+	_3DMath::TimeKeeper timeKeeper;
 };
 
 // Canvas.h

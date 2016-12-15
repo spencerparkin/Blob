@@ -5,6 +5,7 @@
 #include <TriangleMesh.h>
 #include <ParticleSystem.h>
 #include <Renderer.h>
+#include <TimeKeeper.h>
 #include "Camera.h"
 
 class Texture;
@@ -18,7 +19,7 @@ public:
 	virtual ~Blob( void );
 
 	void Render( _3DMath::Renderer& renderer );
-	void Simulate( double currentTime );
+	void Simulate( const _3DMath::TimeKeeper& timeKeeper );
 
 	enum Polyhedron
 	{

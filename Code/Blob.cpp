@@ -35,12 +35,12 @@ void Blob::Render( _3DMath::Renderer& renderer )
 	//renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
 }
 
-void Blob::Simulate( double currentTime )
+void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 {
 	if( driver )
 		driver->Drive( this );
 
-	particleSystem.Simulate( currentTime );
+	particleSystem.Simulate( timeKeeper );
 }
 
 /*virtual*/ void Blob::GetLocation( _3DMath::Vector& location ) const

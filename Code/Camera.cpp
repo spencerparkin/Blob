@@ -17,20 +17,15 @@ Camera::Camera( void )
 	viewTransform.translation.Set( 0.0, 5.0, 10.0 );
 	maxStrafeSpeed = 5.0;
 	maxRotateSpeed = M_PI / 3.0;
-	lastTime = 0.0;
 }
 
 /*virtual*/ Camera::~Camera( void )
 {
 }
 
-void Camera::Update( double currentTime )
+void Camera::Update( const _3DMath::TimeKeeper& timeKeeper )
 {
-	if( lastTime == 0.0 )
-		lastTime = currentTime;
-	double deltaTime = ( currentTime - lastTime ) / 1000.0;
-	deltaTime = 0.017;		// debug...
-	lastTime = currentTime;
+	double deltaTime = timeKeeper.GetDeltaTimeSeconds();
 
 	switch( mode )
 	{
