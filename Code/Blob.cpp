@@ -130,7 +130,9 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 	TriangleMesh::EdgeSet edgeSet;
 	triangleMesh.GenerateEdgeSet( edgeSet );
 
-	double stiffness = 100.0;
+	// TODO: This seems stiffer than need be.  Can improving the integration method/accuracy help?
+	//       The stiffer the springs, the more unstable the simulation.
+	double stiffness = 1000.0;
 
 	for( TriangleMesh::EdgeSet::iterator iter = edgeSet.begin(); iter != edgeSet.end(); iter++ )
 	{
