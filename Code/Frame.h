@@ -21,11 +21,14 @@ private:
 	enum
 	{
 		ID_Exit = wxID_HIGHEST,
+		ID_FreeCam,
 		ID_Timer,
 	};
 
 	void OnExit( wxCommandEvent& event );
 	void OnTimer( wxTimerEvent& event );
+	void OnToggleFreeCam( wxCommandEvent& event );
+	void OnUpdateUI( wxUpdateUIEvent& event );
 
 	Canvas* canvas;
 
