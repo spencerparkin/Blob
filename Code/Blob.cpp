@@ -166,9 +166,17 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		}
 	}
 
-	//ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
-	//gravityForce->accelDueToGravity.Set( 0.0, -9.8, 0.0 );
-	//particleSystem.forceCollection.AddObject( gravityForce );
+	ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
+	gravityForce->accelDueToGravity.Set( 0.0, -9.8, 0.0 );
+	particleSystem.forceCollection.AddObject( gravityForce );
+}
+
+void Blob::RegisterTrackCollisionObject( _3DMath::BoundingBoxTree* boxTree, double friction )
+{
+	ParticleSystem::BoundingBoxTreeCollisionObject* collisionObject = new ParticleSystem::BoundingBoxTreeCollisionObject();
+	collisionObject->boxTree = boxTree;
+	collisionObject->friction = friction;
+	particleSystem.collisionObjectCollection.AddObject( collisionObject );
 }
 
 void Blob::AddVertexPair( const Vector& vector )

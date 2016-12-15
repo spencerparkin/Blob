@@ -11,6 +11,10 @@ int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
+#ifdef _DEBUG
+	timeKeeper.debugDeltaTime = 17.0;
+#endif
+
 	context = nullptr;
 	renderer = new GLRenderer();
 	camera = new Camera();

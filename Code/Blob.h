@@ -20,6 +20,7 @@ public:
 
 	void Render( _3DMath::Renderer& renderer );
 	void Simulate( const _3DMath::TimeKeeper& timeKeeper );
+	void RegisterTrackCollisionObject( _3DMath::BoundingBoxTree* boxTree, double friction );
 
 	enum Polyhedron
 	{

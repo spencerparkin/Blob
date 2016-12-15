@@ -157,6 +157,12 @@ bool Race::Load( const wxString& raceFile )
 		}
 	}
 
+	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
+	{
+		Blob* blob = *iter;
+		blob->RegisterTrackCollisionObject( boxTree, 1.0 );
+	}
+
 	// TODO: Load spline data from XML.  This can be used to determine laps
 	//       and keep AI blobs on track.
 
