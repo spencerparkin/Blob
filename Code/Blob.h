@@ -36,6 +36,8 @@ public:
 	Driver* driver;
 	double maxTorque;
 
+	_3DMath::ParticleSystem* GetParticleSystem( void ) { return &particleSystem; }
+
 private:
 
 	Texture* texture;

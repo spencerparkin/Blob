@@ -3,6 +3,9 @@
 #include "HumanDriver.h"
 #include "Controller.h"
 #include "Application.h"
+#include "Camera.h"
+#include "Blob.h"
+#include <ParticleSystem.h>
 
 HumanDriver::HumanDriver( void )
 {
@@ -16,7 +19,19 @@ HumanDriver::HumanDriver( void )
 {
 	Controller* controller = wxGetApp().controller;
 
-	// TODO: Use controller and maybe camera context to drive the given blob.
+	Camera* camera = wxGetApp().GetCamera();
+	if( camera->mode == Camera::MODE_FREE_CAM )
+		return;
+
+	double leftTriggerValue, rightTriggerValue;
+	controller->GetAnalogTrigger( Controller::LEFT_SIDE, leftTriggerValue );
+	controller->GetAnalogTrigger( Controller::RIGHT_SIDE, rightTriggerValue );
+	
+	_3DMath::ParticleSystem::TorqueForce* torqueForce = new _3DMath::ParticleSystem::TorqueForce( blob->GetParticleSystem() );
+	double torqueScale = -blob->maxTorque * ( rightTriggerValue - leftTriggerValue );
+	torqueForce->torque.SetScaled( camera->viewTransform.linearTransform.xAxis, torqueScale );
+	torqueForce->transient = true;
+	blob->GetParticleSystem()->forceCollection.AddObject( torqueForce );
 }
 
 // HumanDriver.cpp
