@@ -164,7 +164,7 @@ bool Race::Load( const wxString& raceFile )
 
 		_3DMath::ParticleSystem::CollisionPlane* collisionPlane = new _3DMath::ParticleSystem::CollisionPlane();
 		collisionPlane->plane.SetCenterAndNormal( _3DMath::Vector( 0.0, 0.0, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) );
-		collisionPlane->friction = 2.0;
+		collisionPlane->friction = 1.0;
 		blob->GetParticleSystem()->collisionObjectCollection.AddObject( collisionPlane );
 	}
 
@@ -191,8 +191,8 @@ bool Race::Unload( void )
 
 void Race::Render( _3DMath::Renderer& renderer )
 {
-	if( raceTrackMeshTexture )
-		raceTrackMeshTexture->Bind();
+	//if( raceTrackMeshTexture )
+	//	raceTrackMeshTexture->Bind();
 
 	// TODO: To implement track mesh self-shadowing, we would have to figure out
 	//       a way to render the scene from the light-source perspective to generate
@@ -200,7 +200,7 @@ void Race::Render( _3DMath::Renderer& renderer )
 	//       that will get used to render the mesh.  It's worth trying to figure out.
 	//       Note that this would also handle blob shadowing for us.  Look up "Framebuffer Objects."
 
-	renderer.DrawTriangleMesh( raceTrackMesh );
+	//renderer.DrawTriangleMesh( raceTrackMesh );
 
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{

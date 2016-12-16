@@ -121,6 +121,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		ParticleSystem::MeshVertexParticle* particle = new ParticleSystem::MeshVertexParticle();
 		particle->index = i;
 		particle->mesh = &triangleMesh;
+		particle->mass = 1.0;
 
 		particleSystem.particleCollection.AddObject( particle );
 
@@ -130,7 +131,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 	TriangleMesh::EdgeSet edgeSet;
 	triangleMesh.GenerateEdgeSet( edgeSet );
 
-	double stiffness = 1000.0;
+	double stiffness = 60.0;
 
 	for( TriangleMesh::EdgeSet::iterator iter = edgeSet.begin(); iter != edgeSet.end(); iter++ )
 	{
@@ -167,7 +168,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 	}
 
 	ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
-	gravityForce->accelDueToGravity.Set( 0.0, -9.8, 0.0 );
+	gravityForce->accelDueToGravity.Set( 0.0, -1.0, 0.0 );
 	particleSystem.forceCollection.AddObject( gravityForce );
 }
 
