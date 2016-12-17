@@ -1,0 +1,42 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: SpringEngine - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "D:\DOCUME~1\SPENCE~1.PAR\LOCALS~1\Temp\RSP28.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fp"Debug/SpringEngine.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\Spencer\SpringEngine\Spring.cpp"
+]
+Creating command line "cl.exe @D:\DOCUME~1\SPENCE~1.PAR\LOCALS~1\Temp\RSP28.tmp" 
+Creating temporary file "D:\DOCUME~1\SPENCE~1.PAR\LOCALS~1\Temp\RSP29.tmp" with contents
+[
+/nologo /out:"Debug\SpringEngine.lib" 
+.\Debug\BSP_Tree.obj
+.\Debug\ConvexHull.obj
+.\Debug\List.obj
+.\Debug\Matrix.obj
+.\Debug\MemMgr.obj
+.\Debug\Plane.obj
+.\Debug\Polygon.obj
+.\Debug\Quaternion.obj
+.\Debug\Spring.obj
+.\Debug\Texture.obj
+.\Debug\Vector.obj
+]
+Creating command line "link.exe -lib @D:\DOCUME~1\SPENCE~1.PAR\LOCALS~1\Temp\RSP29.tmp"
+<h3>Output Window</h3>
+Compiling...
+Spring.cpp
+Creating library...
+
+
+
+<h3>Results</h3>
+SpringEngine.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
