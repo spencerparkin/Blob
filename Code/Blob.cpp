@@ -30,9 +30,9 @@ void Blob::Render( _3DMath::Renderer& renderer )
 
 	texture->Bind();
 
-	renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
+	//renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
 
-	//renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
+	renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
 }
 
 void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
@@ -145,14 +145,17 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 
 	edgeSet.clear();
 
+	Vector center;
+	triangleMesh.CalculateCenter( center );
+
 	for( int i = 0; i < ( int )triangleMesh.vertexArray->size(); i++ )
 	{
 		Vertex& vertex = ( *triangleMesh.vertexArray )[i];
 
-		Vector negatedPosition;
-		vertex.position.GetNegated( negatedPosition );
+		Vector oppositePosition;
+		oppositePosition.AddScale( center, 2.0, vertex.position, -1.0 );
 
-		int j = triangleMesh.FindIndex( negatedPosition );
+		int j = triangleMesh.FindIndex( oppositePosition );
 		if( j >= 0 )
 		{
 			uint64_t edgePair;
