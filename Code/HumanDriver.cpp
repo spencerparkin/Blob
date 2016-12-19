@@ -3,7 +3,6 @@
 #include "HumanDriver.h"
 #include "Controller.h"
 #include "Application.h"
-#include "Camera.h"
 #include "Blob.h"
 #include <ParticleSystem.h>
 
@@ -15,13 +14,19 @@ HumanDriver::HumanDriver( void )
 {
 }
 
-/*virtual*/ void HumanDriver::Drive( Blob* blob )
+/*virtual*/ void HumanDriver::Drive( Blob* blob, const _3DMath::TimeKeeper& timeKeeper )
 {
 	Controller* controller = wxGetApp().controller;
 
-	Camera* camera = wxGetApp().GetCamera();
-	if( camera->mode == Camera::MODE_FREE_CAM )
-		return;
+	// Steer the blob.
+	_3DMath::Vector unitDir;
+	double mag = 1.0;
+	controller->GetAnalogJoyStick( Controller::RIGHT_SIDE, unitDir, mag );
+	blob->axleAngle += blob->maxTurnRate * timeKeeper.GetDeltaTimeSeconds() * unitDir.x * mag;
+
+	// Drive the blob.
+	_3DMath::Vector unitAxleAxis;
+	blob->GetAxleAxis( unitAxleAxis );
 
 	double leftTriggerValue, rightTriggerValue;
 	controller->GetAnalogTrigger( Controller::LEFT_SIDE, leftTriggerValue );
@@ -29,7 +34,7 @@ HumanDriver::HumanDriver( void )
 	
 	_3DMath::ParticleSystem::TorqueForce* torqueForce = new _3DMath::ParticleSystem::TorqueForce( blob->GetParticleSystem() );
 	double torqueScale = -blob->maxTorque * ( rightTriggerValue - leftTriggerValue );
-	torqueForce->torque.SetScaled( camera->viewTransform.linearTransform.xAxis, torqueScale );
+	torqueForce->torque.SetScaled( unitAxleAxis, torqueScale );
 	torqueForce->transient = true;
 	blob->GetParticleSystem()->forceCollection.AddObject( torqueForce );
 }

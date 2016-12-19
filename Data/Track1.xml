@@ -5,5 +5,5 @@
 	</CheckPoints>
 	<Laps>3</Laps>
 	<Mesh texture="Track1.png" geometry="Track1.obj"/>
-	<Blob driver="human" scale="0.3" type="icosahedron" subDivide="0" x="20.5" y="1.7" z="2.0"/>
+	<Blob driver="human" scale="1.0" type="icosahedron" subDivide="0" x="20.5" y="1.7" z="2.0"/>
 </Track>

@@ -11,7 +11,7 @@ public:
 	ComputerDriver( void );
 	virtual ~ComputerDriver( void );
 
-	virtual void Drive( Blob* blob ) override;
+	virtual void Drive( Blob* blob, const _3DMath::TimeKeeper& timeKeeper ) override;
 };
 
 // ComputerDriver.h

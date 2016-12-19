@@ -35,14 +35,18 @@ public:
 
 	Driver* driver;
 	double maxTorque;
+	double axleAngle;
+	double maxTurnRate;
 
 	_3DMath::ParticleSystem* GetParticleSystem( void ) { return &particleSystem; }
+
+	void GetAxleAxis( _3DMath::Vector& unitAxleAxis ) const;
 
 private:
 
 	Texture* texture;
 
-	void AddVertexPair( const _3DMath::Vector& vector );
+	void AddSymmetricVertices( const _3DMath::Vector& vector );
 	void MakeSpring( int index0, int index1, std::vector< int >& particleIds, double stiffness );
 
 	_3DMath::ParticleSystem particleSystem;

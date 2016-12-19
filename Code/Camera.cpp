@@ -10,11 +10,11 @@ Camera::Camera( void )
 {
 	mode = MODE_FREE_CAM;
 	subject = nullptr;
-	followingDistance = 5.0;
+	followingDistance = 10.0;
 	hoverHeight = 2.0;
 	viewAngle = M_PI / 3.0;
 	viewTransform.linearTransform.Identity();
-	viewTransform.translation.Set( 0.0, 5.0, 10.0 );
+	viewTransform.translation.Set( 0.0, 0.0, 20.0 );
 	maxStrafeSpeed = 5.0;
 	maxRotateSpeed = M_PI / 3.0;
 }
@@ -116,6 +116,11 @@ void Camera::Update( const _3DMath::TimeKeeper& timeKeeper )
 			viewTransform.linearTransform.xAxis.Normalize();
 			viewTransform.linearTransform.yAxis.Cross( viewTransform.linearTransform.zAxis, viewTransform.linearTransform.xAxis );
 
+			break;
+		}
+		case MODE_STATIONARY:
+		{
+			// Just stay still.
 			break;
 		}
 	}

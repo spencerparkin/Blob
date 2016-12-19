@@ -12,6 +12,8 @@ Blob::Blob( void )
 	driver = nullptr;
 
 	maxTorque = 5.0;
+	axleAngle = 0.0;
+	maxTurnRate = M_PI / 4.0;
 }
 
 /*virtual*/ Blob::~Blob( void )
@@ -30,17 +32,22 @@ void Blob::Render( _3DMath::Renderer& renderer )
 
 	texture->Bind();
 
-	//renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
+	renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
 
-	renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
+	//renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
 }
 
 void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 {
 	if( driver )
-		driver->Drive( this );
+		driver->Drive( this, timeKeeper );
 
 	particleSystem.Simulate( timeKeeper );
+}
+
+void Blob::GetAxleAxis( _3DMath::Vector& unitAxleAxis ) const
+{
+	unitAxleAxis.Set( cos( axleAngle ), 0.0, sin( axleAngle ) );
 }
 
 /*virtual*/ void Blob::GetLocation( _3DMath::Vector& location ) const
@@ -61,10 +68,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		{
 			radius = sqrt( 3.0 );
 
-			AddVertexPair( Vector( 1.0, 1.0, 1.0 ) );
-			AddVertexPair( Vector( -1.0, 1.0, 1.0 ) );
-			AddVertexPair( Vector( 1.0, -1.0, 1.0 ) );
-			AddVertexPair( Vector( -1.0, -1.0, 1.0 ) );
+			AddSymmetricVertices( Vector( 1.0, 1.0, 1.0 ) );
 
 			break;
 		}
@@ -72,14 +76,9 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		{
 			radius = sqrt( 1.0 + PHI * PHI );
 
-			AddVertexPair( Vector( 0.0, 1.0, PHI ) );
-			AddVertexPair( Vector( 0.0, -1.0, PHI ) );
-
-			AddVertexPair( Vector( 1.0, PHI, 0.0 ) );
-			AddVertexPair( Vector( -1.0, PHI, 0.0 ) );
-
-			AddVertexPair( Vector( PHI, 0.0, 1.0 ) );
-			AddVertexPair( Vector( PHI, 0.0, -1.0 ) );
+			AddSymmetricVertices( Vector( 0.0, 1.0, PHI ) );
+			AddSymmetricVertices( Vector( 1.0, PHI, 0.0 ) );
+			AddSymmetricVertices( Vector( PHI, 0.0, 1.0 ) );
 
 			break;
 		}
@@ -87,19 +86,10 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		{
 			radius = sqrt( 3.0 );
 
-			AddVertexPair( Vector( 1.0, 1.0, 1.0 ) );
-			AddVertexPair( Vector( -1.0, 1.0, 1.0 ) );
-			AddVertexPair( Vector( 1.0, -1.0, 1.0 ) );
-			AddVertexPair( Vector( -1.0, -1.0, 1.0 ) );
-
-			AddVertexPair( Vector( 0.0, 1.0 / PHI, PHI ) );
-			AddVertexPair( Vector( 0.0, -1.0 / PHI, PHI ) );
-
-			AddVertexPair( Vector( 1.0 / PHI, PHI, 0.0 ) );
-			AddVertexPair( Vector( -1.0 / PHI, PHI, 0.0 ) );
-
-			AddVertexPair( Vector( PHI, 0.0, 1.0 / PHI ) );
-			AddVertexPair( Vector( PHI, 0.0, -1.0 / PHI ) );
+			AddSymmetricVertices( Vector( 1.0, 1.0, 1.0 ) );
+			AddSymmetricVertices( Vector( 0.0, 1.0 / PHI, PHI ) );
+			AddSymmetricVertices( Vector( 1.0 / PHI, PHI, 0.0 ) );
+			AddSymmetricVertices( Vector( PHI, 0.0, 1.0 / PHI ) );
 
 			break;
 		}
@@ -124,6 +114,8 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		particle->mass = 1.0;
 
 		particleSystem.particleCollection.AddObject( particle );
+
+		particle->GetPosition( particle->previousPosition );
 
 		particleIds.push_back( particle->id );
 	}
@@ -171,7 +163,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 	}
 
 	ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
-	gravityForce->accelDueToGravity.Set( 0.0, -1.0, 0.0 );
+	gravityForce->accelDueToGravity.Set( 0.0, -5.0, 0.0 );
 	particleSystem.forceCollection.AddObject( gravityForce );
 }
 
@@ -183,18 +175,26 @@ void Blob::RegisterTrackCollisionObject( _3DMath::BoundingBoxTree* boxTree, doub
 	particleSystem.collisionObjectCollection.AddObject( collisionObject );
 }
 
-void Blob::AddVertexPair( const Vector& vector )
+void Blob::AddSymmetricVertices( const Vector& vector )
 {
-	Vector negatedVector;
-	vector.GetNegated( negatedVector );
-
-	Vertex vertex;
+	for( int i = 0; i < 8; i++ )
+	{
+		if( ( ( i & 1 ) && vector.x == 0.0 ) ||
+			( ( i & 2 ) && vector.y == 0.0 ) ||
+			( ( i & 4 ) && vector.z == 0.0 ) )
+		{
+			continue;
+		}
+		
+		Vertex vertex;
+		vertex.position = vector;
+		
+		vertex.position.x = ( i & 1 ) ? -vector.x : vector.x;
+		vertex.position.y = ( i & 2 ) ? -vector.y : vector.y;
+		vertex.position.z = ( i & 4 ) ? -vector.z : vector.z;
 	
-	vertex.position = vector;
-	triangleMesh.vertexArray->push_back( vertex );
-
-	vertex.position = negatedVector;
-	triangleMesh.vertexArray->push_back( vertex );
+		triangleMesh.vertexArray->push_back( vertex );
+	}
 }
 
 void Blob::MakeSpring( int index0, int index1, std::vector< int >& particleIds, double stiffness )

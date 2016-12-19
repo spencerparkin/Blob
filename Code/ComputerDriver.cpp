@@ -10,7 +10,7 @@ ComputerDriver::ComputerDriver( void )
 {
 }
 
-/*virtual*/ void ComputerDriver::Drive( Blob* blob )
+/*virtual*/ void ComputerDriver::Drive( Blob* blob, const _3DMath::TimeKeeper& timeKeeper )
 {
 }
 

@@ -11,9 +11,7 @@ int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE
 
 Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList )
 {
-#ifdef _DEBUG
-	timeKeeper.debugDeltaTime = 17.0;
-#endif
+	timeKeeper.fixedDeltaTime = 50.0;
 
 	context = nullptr;
 	renderer = new GLRenderer();
@@ -72,6 +70,20 @@ void Canvas::OnPaint( wxPaintEvent& event )
 	camera->SetupOpenGLViewingMatrices();
 
 	wxGetApp().race->Render( *renderer );
+
+	glColor3f( 0.5f, 0.5f, 0.5f );
+	glBegin( GL_LINES );
+
+	for( double q = -100.0; q <= 100.0; q += 5.0 )
+	{
+		glVertex3d( q, -4.0, -100.0 );
+		glVertex3d( q, -4.0, 100.0 );
+
+		glVertex3d( -100.0, -4.0, q );
+		glVertex3d( 100.0, -4.0, q );
+	}
+
+	glEnd();
 
 	glFlush();
 

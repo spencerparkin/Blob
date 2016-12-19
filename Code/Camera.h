@@ -26,6 +26,7 @@ public:
 	{
 		MODE_FREE_CAM,
 		MODE_FOLLOW_SUBJECT,
+		MODE_STATIONARY,
 	};
 
 	Mode mode;
