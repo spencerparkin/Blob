@@ -1,6 +1,6 @@
-// Race.cpp
+// Stage.cpp
 
-#include "Race.h"
+#include "Stage.h"
 #include "Texture.h"
 #include "Blob.h"
 #include "HumanDriver.h"
@@ -12,20 +12,18 @@
 #include <wx/wfstream.h>
 #include <sstream>
 
-Race::Race( void )
+Stage::Stage( void )
 {
-	laps = 0;
-
-	raceTrackMeshTexture = nullptr;
+	texture = nullptr;
 	boxTree = nullptr;
 }
 
-/*virtual*/ Race::~Race( void )
+/*virtual*/ Stage::~Stage( void )
 {
 	( void )Unload();
 }
 
-void Race::DeleteBlobList( void )
+void Stage::DeleteBlobList( void )
 {
 	while( blobList.size() > 0 )
 	{
@@ -36,26 +34,36 @@ void Race::DeleteBlobList( void )
 	}
 }
 
-bool Race::Load( const wxString& raceFile )
+bool Stage::Load( const wxString& stageFile )
 {
 	if( !Unload() )
 		return false;
 
-	wxFileInputStream raceFileStream( raceFile );
-	if( !raceFileStream.IsOk() )
+	wxFileInputStream stageFileStream( stageFile );
+	if( !stageFileStream.IsOk() )
 		return false;
 
-	wxXmlDocument xmlDoc( raceFileStream );
+	wxXmlDocument xmlDoc( stageFileStream );
 	if( !xmlDoc.IsOk() )
 		return false;
 
 	wxXmlNode* xmlRootNode = xmlDoc.GetRoot();
-	if( xmlRootNode->GetName() != "Track" )
+	if( xmlRootNode->GetName() != "Stage" )
 		return false;
 
 	for( wxXmlNode* xmlNode = xmlRootNode->GetChildren(); xmlNode; xmlNode = xmlNode->GetNext() )
 	{
-		if( xmlNode->GetName() == "Mesh" )
+		if( xmlNode->GetName() == "DeathPlane" )
+		{
+			_3DMath::Vector center( 0.0, 0.0, 0.0 );
+
+			wxString attribStr = xmlNode->GetAttribute( "y" );
+			if( !attribStr.ToCDouble( &center.y ) )
+				return false;
+
+			deathPlane.SetCenterAndNormal( center, _3DMath::Vector( 0.0, 1.0, 0.0 ) );
+		}
+		else if( xmlNode->GetName() == "Mesh" )
 		{
 			wxString geometryFile = xmlNode->GetAttribute( "geometry" );
 			if( geometryFile.IsEmpty() )
@@ -70,18 +78,18 @@ bool Race::Load( const wxString& raceFile )
 			meshDataStream << meshData.c_str();
 
 			_3DMath::FileFormat* format = _3DMath::FileFormat::CreateForFile( ( const char* )geometryFile.c_str() );
-			bool meshLoaded = format->LoadTriangleMesh( raceTrackMesh, meshDataStream );
+			bool meshLoaded = format->LoadTriangleMesh( mesh, meshDataStream );
 			delete format;
 			if( !meshLoaded )
 				return false;
 
-			if( !raceTrackMeshTexture )
+			if( !texture )
 			{
 				wxString textureFile = xmlNode->GetAttribute( "texture" );
 				if( !textureFile.IsEmpty() )
 				{
-					raceTrackMeshTexture = new Texture();
-					if( !raceTrackMeshTexture->Load( "Data/" + textureFile ) )
+					texture = new Texture();
+					if( !texture->Load( "Data/" + textureFile ) )
 						return false;
 				}
 			}
@@ -89,28 +97,18 @@ bool Race::Load( const wxString& raceFile )
 			if( !boxTree )
 			{
 				_3DMath::AxisAlignedBox boundingBox;
-				if( raceTrackMesh.GenerateBoundingBox( boundingBox ) )
+				if( mesh.GenerateBoundingBox( boundingBox ) )
 				{
 					boxTree = new _3DMath::BoundingBoxTree();
 					boxTree->GenerateNodes( boundingBox, 5 );
 
 					_3DMath::TriangleList triangleList;
-					raceTrackMesh.GenerateTriangleList( triangleList );
+					mesh.GenerateTriangleList( triangleList );
 
 					if( !boxTree->InsertTriangleList( triangleList ) )
 						return false;
 				}
 			}
-		}
-		else if( xmlNode->GetName() == "Laps" )
-		{
-			wxString lapString = xmlNode->GetChildren()->GetContent();
-
-			long lapsLong;
-			if( !lapString.ToLong( &lapsLong ) )
-				return false;
-
-			laps = ( int )lapsLong;
 		}
 		else if( xmlNode->GetName() == "Blob" )
 		{
@@ -121,15 +119,16 @@ bool Race::Load( const wxString& raceFile )
 			double scale = 1.0;
 			attribStr.ToCDouble( &scale );
 
+			attribStr = xmlNode->GetAttribute( "x" );
+			attribStr.ToCDouble( &respawnLocation.x );
+			attribStr = xmlNode->GetAttribute( "y" );
+			attribStr.ToCDouble( &respawnLocation.y );
+			attribStr = xmlNode->GetAttribute( "z" );
+			attribStr.ToCDouble( &respawnLocation.z );
+
 			_3DMath::AffineTransform affineTransform;
 			affineTransform.linearTransform.SetScale( scale );
-
-			attribStr = xmlNode->GetAttribute( "x" );
-			attribStr.ToCDouble( &affineTransform.translation.x );
-			attribStr = xmlNode->GetAttribute( "y" );
-			attribStr.ToCDouble( &affineTransform.translation.y );
-			attribStr = xmlNode->GetAttribute( "z" );
-			attribStr.ToCDouble( &affineTransform.translation.z );
+			affineTransform.translation = respawnLocation;
 
 			bool subDivide = false;
 			attribStr = xmlNode->GetAttribute( "subDivide" );
@@ -160,28 +159,22 @@ bool Race::Load( const wxString& raceFile )
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
 		Blob* blob = *iter;
-		//blob->RegisterTrackCollisionObject( boxTree, 1.0 );
-
-		_3DMath::ParticleSystem::CollisionPlane* collisionPlane = new _3DMath::ParticleSystem::CollisionPlane();
-		collisionPlane->plane.SetCenterAndNormal( _3DMath::Vector( 0.0, -4.0, 0.0 ), _3DMath::Vector( 0.0, 1.0, 0.0 ) );
-		collisionPlane->friction = 1.0;
-		blob->GetParticleSystem()->collisionObjectCollection.AddObject( collisionPlane );
+		blob->RegisterTrackCollisionObject( boxTree, 1.0 );
 	}
 
-	// TODO: Load spline data from XML.  This can be used to determine laps
-	//       and keep AI blobs on track.
+	// TODO: Load spline data from XML.  This helps AI blobs blob-around the stage.
 
 	return true;
 }
 
-bool Race::Unload( void )
+bool Stage::Unload( void )
 {
 	DeleteBlobList();
 
-	raceTrackMesh.Clear();
+	mesh.Clear();
 
-	delete raceTrackMeshTexture;
-	raceTrackMeshTexture = nullptr;
+	delete texture;
+	texture = nullptr;
 
 	delete boxTree;
 	boxTree = nullptr;
@@ -189,10 +182,10 @@ bool Race::Unload( void )
 	return true;
 }
 
-void Race::Render( _3DMath::Renderer& renderer )
+void Stage::Render( _3DMath::Renderer& renderer )
 {
-	//if( raceTrackMeshTexture )
-	//	raceTrackMeshTexture->Bind();
+	if( texture )
+		texture->Bind();
 
 	// TODO: To implement track mesh self-shadowing, we would have to figure out
 	//       a way to render the scene from the light-source perspective to generate
@@ -200,7 +193,7 @@ void Race::Render( _3DMath::Renderer& renderer )
 	//       that will get used to render the mesh.  It's worth trying to figure out.
 	//       Note that this would also handle blob shadowing for us.  Look up "Framebuffer Objects."
 
-	//renderer.DrawTriangleMesh( raceTrackMesh );
+	renderer.DrawTriangleMesh( mesh );
 
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
@@ -218,13 +211,23 @@ void Race::Render( _3DMath::Renderer& renderer )
 #endif
 }
 
-void Race::Simulate( const _3DMath::TimeKeeper& timeKeeper )
+void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 {
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
 		Blob* blob = *iter;
 		blob->Simulate( timeKeeper );
+
+		_3DMath::Vector location;
+		blob->GetLocation( location );
+
+		if( deathPlane.GetSide( location ) == _3DMath::Plane::SIDE_BACK )
+		{
+			_3DMath::AffineTransform transform;
+			transform.translation.Subtract( respawnLocation, location );
+			blob->Teleport( transform );
+		}
 	}
 }
 
-// Race.cpp
+// Stage.cpp

@@ -1,0 +1,5 @@
+<Stage>
+	<Mesh texture="Stage1.png" geometry="Stage1.obj"/>
+	<Blob driver="human" scale="1.0" type="icosahedron" subDivide="0" x="20.5" y="3.7" z="2.0"/>
+	<DeathPlane y="-100.0"/>
+</Stage>

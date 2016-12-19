@@ -1,4 +1,4 @@
-// Race.h
+// Stage.h
 
 #pragma once
 
@@ -8,17 +8,18 @@
 #include <Renderer.h>
 #include <BoundingBoxTree.h>
 #include <TimeKeeper.h>
+#include <Plane.h>
 
 class Texture;
 
-class Race
+class Stage
 {
 public:
 
-	Race( void );
-	virtual ~Race( void );
+	Stage( void );
+	virtual ~Stage( void );
 
-	bool Load( const wxString& raceFile );
+	bool Load( const wxString& stageFile );
 	bool Unload( void );
 
 	void Render( _3DMath::Renderer& renderer );
@@ -29,10 +30,12 @@ private:
 	void DeleteBlobList( void );
 
 	BlobList blobList;
-	_3DMath::TriangleMesh raceTrackMesh;
-	Texture* raceTrackMeshTexture;
+	Texture* texture;
+	_3DMath::Vector respawnLocation;
+	_3DMath::Plane deathPlane;
+	_3DMath::TriangleMesh mesh;
 	_3DMath::BoundingBoxTree* boxTree;
-	int laps;
+	// TODO: Own list of orbs here.
 };
 
-// Race.h
+// Stage.h

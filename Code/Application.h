@@ -6,7 +6,7 @@
 
 class Frame;
 class Controller;
-class Race;
+class Stage;
 class Camera;
 
 class Application : public wxApp
@@ -22,7 +22,7 @@ public:
 
 	Frame* frame;
 	Controller* controller;
-	Race* race;
+	Stage* stage;
 };
 
 wxDECLARE_APP( Application );

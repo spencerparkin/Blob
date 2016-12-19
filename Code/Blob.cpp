@@ -167,6 +167,12 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 	particleSystem.forceCollection.AddObject( gravityForce );
 }
 
+void Blob::Teleport( const _3DMath::AffineTransform& transform )
+{
+	triangleMesh.Transform( transform );
+	particleSystem.ResetMotion();
+}
+
 void Blob::RegisterTrackCollisionObject( _3DMath::BoundingBoxTree* boxTree, double friction )
 {
 	ParticleSystem::BoundingBoxTreeCollisionObject* collisionObject = new ParticleSystem::BoundingBoxTreeCollisionObject();

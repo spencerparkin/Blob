@@ -3,7 +3,7 @@
 #include "Application.h"
 #include "Frame.h"
 #include "Controller.h"
-#include "Race.h"
+#include "Stage.h"
 #include "Canvas.h"
 #include <wx/image.h>
 
@@ -11,13 +11,13 @@ Application::Application( void )
 {
 	frame = nullptr;
 	controller = nullptr;
-	race = nullptr;
+	stage = nullptr;
 }
 
 /*virtual*/ Application::~Application( void )
 {
 	delete controller;
-	delete race;
+	delete stage;
 }
 
 /*virtual*/ bool Application::OnInit( void )

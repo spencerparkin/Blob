@@ -3,7 +3,7 @@
 #include "Canvas.h"
 #include "Application.h"
 #include "GLRenderer.h"
-#include "Race.h"
+#include "Stage.h"
 #include "Camera.h"
 #include "Controller.h"
 
@@ -40,17 +40,18 @@ void Canvas::Advance( void )
 {
 	timeKeeper.MarkCurrentTime();
 
-	if( !wxGetApp().race )
+	if( !wxGetApp().stage )
 	{
-		wxGetApp().race = new Race();
-		wxGetApp().race->Load( "Data/Track1.xml" );
+		// TODO: Remember where the user left off and start from there.
+		wxGetApp().stage = new Stage();
+		wxGetApp().stage->Load( "Data/Stage1.xml" );
 	}
 
 	wxGetApp().controller->UpdateState();
 
 	camera->Update( timeKeeper );
 
-	wxGetApp().race->Simulate( timeKeeper );
+	wxGetApp().stage->Simulate( timeKeeper );
 }
 
 void Canvas::OnPaint( wxPaintEvent& event )
@@ -69,21 +70,7 @@ void Canvas::OnPaint( wxPaintEvent& event )
 
 	camera->SetupOpenGLViewingMatrices();
 
-	wxGetApp().race->Render( *renderer );
-
-	glColor3f( 0.5f, 0.5f, 0.5f );
-	glBegin( GL_LINES );
-
-	for( double q = -100.0; q <= 100.0; q += 5.0 )
-	{
-		glVertex3d( q, -4.0, -100.0 );
-		glVertex3d( q, -4.0, 100.0 );
-
-		glVertex3d( -100.0, -4.0, q );
-		glVertex3d( 100.0, -4.0, q );
-	}
-
-	glEnd();
+	wxGetApp().stage->Render( *renderer );
 
 	glFlush();
 

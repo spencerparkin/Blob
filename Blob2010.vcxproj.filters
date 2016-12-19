@@ -37,10 +37,10 @@
     <ClCompile Include="Code\HumanDriver.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Race.cpp">
+    <ClCompile Include="Code\Driver.cpp">
       <Filter>Code</Filter>
     </ClCompile>
-    <ClCompile Include="Code\Driver.cpp">
+    <ClCompile Include="Code\Stage.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>
@@ -75,10 +75,10 @@
     <ClInclude Include="Code\HumanDriver.h">
       <Filter>Code</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Race.h">
+    <ClInclude Include="Code\Driver.h">
       <Filter>Code</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Driver.h">
+    <ClInclude Include="Code\Stage.h">
       <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>

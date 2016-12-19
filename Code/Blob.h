@@ -30,6 +30,7 @@ public:
 	};
 
 	void MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath::AffineTransform& transform );
+	void Teleport( const _3DMath::AffineTransform& transform );
 
 	virtual void GetLocation( _3DMath::Vector& location ) const override;
 
