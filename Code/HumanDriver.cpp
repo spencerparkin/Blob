@@ -21,7 +21,7 @@ HumanDriver::HumanDriver( void )
 	// Steer the blob.
 	_3DMath::Vector unitDir;
 	double mag = 1.0;
-	controller->GetAnalogJoyStick( Controller::RIGHT_SIDE, unitDir, mag );
+	controller->GetAnalogJoyStick( Controller::LEFT_SIDE, unitDir, mag );
 	blob->axleAngle += blob->maxTurnRate * timeKeeper.GetDeltaTimeSeconds() * unitDir.x * mag;
 
 	// Drive the blob.

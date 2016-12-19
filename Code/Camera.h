@@ -17,6 +17,7 @@ public:
 	{
 	public:
 		virtual void GetLocation( _3DMath::Vector& location ) const = 0;
+		virtual void GetFacingDirection( _3DMath::Vector& facingUnitDir ) const = 0;
 	};
 
 	void Update( const _3DMath::TimeKeeper& timeKeeper );
@@ -26,6 +27,7 @@ public:
 	{
 		MODE_FREE_CAM,
 		MODE_FOLLOW_SUBJECT,
+		MODE_FOLLOW_BEHIND_SUBJECT,
 		MODE_STATIONARY,
 	};
 

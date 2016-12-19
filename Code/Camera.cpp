@@ -72,6 +72,7 @@ void Camera::Update( const _3DMath::TimeKeeper& timeKeeper )
 			break;
 		}
 		case MODE_FOLLOW_SUBJECT:
+		case MODE_FOLLOW_BEHIND_SUBJECT:
 		{
 			if( !subject )
 				break;
@@ -79,14 +80,27 @@ void Camera::Update( const _3DMath::TimeKeeper& timeKeeper )
 			_3DMath::AffineTransform targetTransform;
 			subject->GetLocation( targetTransform.translation );
 
-			// TODO: Track last move direction of subject and use that instead of this to build our frame.
 			_3DMath::Vector targetToCamera;
 			targetToCamera.Subtract( viewTransform.translation, targetTransform.translation );
 
 			targetTransform.linearTransform.yAxis.Set( 0.0, 1.0, 0.0 );
-			targetTransform.linearTransform.zAxis.Cross( targetToCamera, targetTransform.linearTransform.yAxis );
-			targetTransform.linearTransform.zAxis.Normalize();
-			targetTransform.linearTransform.xAxis.Cross( targetTransform.linearTransform.yAxis, targetTransform.linearTransform.zAxis );
+
+			if( mode == MODE_FOLLOW_BEHIND_SUBJECT )
+			{
+				_3DMath::Vector targetFacingDir;
+				subject->GetFacingDirection( targetFacingDir );
+
+				targetTransform.linearTransform.xAxis.SetNegated( targetFacingDir );
+				targetTransform.linearTransform.xAxis.RejectFrom( targetTransform.linearTransform.yAxis );
+				targetTransform.linearTransform.xAxis.Normalize();
+				targetTransform.linearTransform.zAxis.Cross( targetTransform.linearTransform.xAxis, targetTransform.linearTransform.yAxis );
+			}
+			else
+			{
+				targetTransform.linearTransform.zAxis.Cross( targetToCamera, targetTransform.linearTransform.yAxis );
+				targetTransform.linearTransform.zAxis.Normalize();
+				targetTransform.linearTransform.xAxis.Cross( targetTransform.linearTransform.yAxis, targetTransform.linearTransform.zAxis );
+			}
 
 			_3DMath::Vector targetCameraPosition( sqrt( followingDistance * followingDistance - hoverHeight * hoverHeight ), hoverHeight, 0.0 );
 			targetTransform.Transform( targetCameraPosition );

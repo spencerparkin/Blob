@@ -55,6 +55,13 @@ void Blob::GetAxleAxis( _3DMath::Vector& unitAxleAxis ) const
 	location = particleSystem.centerOfMass;
 }
 
+/*virtual*/ void Blob::GetFacingDirection( _3DMath::Vector& facingUnitDir ) const
+{
+	GetAxleAxis( facingUnitDir );
+
+	facingUnitDir.Rotate( _3DMath::Vector( 0.0, 1.0, 0.0 ), M_PI / 2.0 );
+}
+
 void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath::AffineTransform& transform )
 {
 	triangleMesh.Clear();

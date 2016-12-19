@@ -33,6 +33,7 @@ public:
 	void Teleport( const _3DMath::AffineTransform& transform );
 
 	virtual void GetLocation( _3DMath::Vector& location ) const override;
+	virtual void GetFacingDirection( _3DMath::Vector& facingUnitDir ) const override;
 
 	Driver* driver;
 	double maxTorque;

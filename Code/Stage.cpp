@@ -105,7 +105,9 @@ bool Stage::Load( const wxString& stageFile )
 					_3DMath::TriangleList triangleList;
 					mesh.GenerateTriangleList( triangleList );
 
-					if( !boxTree->InsertTriangleList( triangleList ) )
+					_3DMath::Vector normalFilter( 0.0, 1.0, 0.0 );
+					double angleFilter = M_PI / 2.0;
+					if( !boxTree->InsertTriangleList( triangleList, &normalFilter, angleFilter ) )
 						return false;
 				}
 			}
@@ -149,7 +151,7 @@ bool Stage::Load( const wxString& stageFile )
 				blob->driver = new HumanDriver();
 				Camera* camera = wxGetApp().GetCamera();
 				camera->subject = blob;
-				camera->mode = Camera::MODE_FOLLOW_SUBJECT;
+				camera->mode = Camera::MODE_FOLLOW_BEHIND_SUBJECT;
 			}
 			else if( attribStr == "computer" )
 				blob->driver = new ComputerDriver();
@@ -184,8 +186,8 @@ bool Stage::Unload( void )
 
 void Stage::Render( _3DMath::Renderer& renderer )
 {
-	if( texture )
-		texture->Bind();
+	//if( texture )
+	//	texture->Bind();
 
 	// TODO: To implement track mesh self-shadowing, we would have to figure out
 	//       a way to render the scene from the light-source perspective to generate
@@ -193,7 +195,7 @@ void Stage::Render( _3DMath::Renderer& renderer )
 	//       that will get used to render the mesh.  It's worth trying to figure out.
 	//       Note that this would also handle blob shadowing for us.  Look up "Framebuffer Objects."
 
-	renderer.DrawTriangleMesh( mesh );
+	//renderer.DrawTriangleMesh( mesh );
 
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
@@ -201,7 +203,7 @@ void Stage::Render( _3DMath::Renderer& renderer )
 		blob->Render( renderer );
 	}
 
-#if 0
+#if 1
 	if( boxTree )
 	{
 		glDisable( GL_TEXTURE_2D );
