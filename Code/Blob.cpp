@@ -35,12 +35,18 @@ void Blob::Render( _3DMath::Renderer& renderer )
 	renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
 
 	//renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
+
+	glDisable( GL_TEXTURE_2D );
+	glColor3f( 1.f, 1.f, 1.f );
+	boundingBox.Render( renderer );
 }
 
 void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 {
 	if( driver )
 		driver->Drive( this, timeKeeper );
+
+	triangleMesh.GenerateBoundingBox( boundingBox );
 
 	particleSystem.Simulate( timeKeeper );
 }

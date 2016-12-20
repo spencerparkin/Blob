@@ -6,6 +6,7 @@
 #include <ParticleSystem.h>
 #include <Renderer.h>
 #include <TimeKeeper.h>
+#include <AxisAlignedBox.h>
 #include "Camera.h"
 
 class Texture;
@@ -53,6 +54,7 @@ private:
 
 	_3DMath::ParticleSystem particleSystem;
 	_3DMath::TriangleMesh triangleMesh;
+	_3DMath::AxisAlignedBox boundingBox;
 };
 
 typedef std::list< Blob* > BlobList;
