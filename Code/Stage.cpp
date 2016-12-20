@@ -7,6 +7,7 @@
 #include "ComputerDriver.h"
 #include "Application.h"
 #include "Camera.h"
+#include "Frame.h"
 #include <FileFormat.h>
 #include <wx/xml/xml.h>
 #include <wx/wfstream.h>
@@ -186,31 +187,34 @@ bool Stage::Unload( void )
 
 void Stage::Render( _3DMath::Renderer& renderer )
 {
-	//if( texture )
-	//	texture->Bind();
+	if( wxGetApp().frame->debugDrawFlags & Frame::DRAW_COLLISION_OBJECTS )
+	{
+		if( boxTree )
+		{
+			glDisable( GL_TEXTURE_2D );
+			renderer.random.Seed(0);
+			renderer.DrawBoundingBoxTree( *boxTree, _3DMath::Renderer::DRAW_BOXES | _3DMath::Renderer::DRAW_TRIANGLES );
+		}
+	}
+	else
+	{
+		if( texture )
+			texture->Bind();
 
-	// TODO: To implement track mesh self-shadowing, we would have to figure out
-	//       a way to render the scene from the light-source perspective to generate
-	//       an off-screen depth-map.  This map would then be passed to the shader
-	//       that will get used to render the mesh.  It's worth trying to figure out.
-	//       Note that this would also handle blob shadowing for us.  Look up "Framebuffer Objects."
+		// TODO: To implement track mesh self-shadowing, we would have to figure out
+		//       a way to render the scene from the light-source perspective to generate
+		//       an off-screen depth-map.  This map would then be passed to the shader
+		//       that will get used to render the mesh.  It's worth trying to figure out.
+		//       Note that this would also handle blob shadowing for us.  Look up "Framebuffer Objects."
 
-	//renderer.DrawTriangleMesh( mesh );
+		renderer.DrawTriangleMesh( mesh );
+	}
 
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
 		Blob* blob = *iter;
 		blob->Render( renderer );
 	}
-
-#if 1
-	if( boxTree )
-	{
-		glDisable( GL_TEXTURE_2D );
-		renderer.random.Seed(0);
-		renderer.DrawBoundingBoxTree( *boxTree, _3DMath::Renderer::DRAW_BOXES | _3DMath::Renderer::DRAW_TRIANGLES );
-	}
-#endif
 }
 
 void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )

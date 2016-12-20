@@ -3,6 +3,8 @@
 #include "Blob.h"
 #include "Texture.h"
 #include "Driver.h"
+#include "Frame.h"
+#include "Application.h"
 
 using namespace _3DMath;
 
@@ -32,13 +34,17 @@ void Blob::Render( _3DMath::Renderer& renderer )
 
 	texture->Bind();
 
-	renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
+	if( wxGetApp().frame->debugDrawFlags & Frame::DRAW_FORCES )
+		renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
+	else
+		renderer.DrawTriangleMesh( triangleMesh, Renderer::UV_CORRECTION );
 
-	//renderer.DrawParticleSystem( particleSystem, Renderer::DRAW_FORCES );
-
-	glDisable( GL_TEXTURE_2D );
-	glColor3f( 1.f, 1.f, 1.f );
-	boundingBox.Render( renderer );
+	if( wxGetApp().frame->debugDrawFlags & Frame::DRAW_COLLISION_OBJECTS )
+	{
+		glDisable( GL_TEXTURE_2D );
+		glColor3f( 1.f, 1.f, 1.f );
+		boundingBox.Render( renderer );
+	}
 }
 
 void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
