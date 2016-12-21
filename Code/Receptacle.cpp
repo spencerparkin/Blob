@@ -101,6 +101,7 @@ InventoryItemReceptacle::InventoryItemReceptacle( void )
 /*virtual*/ InventoryItemReceptacle::~InventoryItemReceptacle( void )
 {
 	delete inventoryItem;
+	delete templateItem;
 }
 
 /*virtual*/ void InventoryItemReceptacle::Simulate( const _3DMath::TimeKeeper& timeKeeper, BlobList& blobList )
