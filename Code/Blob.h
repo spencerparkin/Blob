@@ -8,6 +8,7 @@
 #include <TimeKeeper.h>
 #include <AxisAlignedBox.h>
 #include "Camera.h"
+#include "Property.h"
 
 class Texture;
 class Driver;
@@ -37,13 +38,14 @@ public:
 	virtual void GetFacingDirection( _3DMath::Vector& facingUnitDir ) const override;
 
 	Driver* driver;
-	double maxTorque;
-	double axleAngle;
-	double maxTurnRate;
 
 	_3DMath::ParticleSystem* GetParticleSystem( void ) { return &particleSystem; }
 
 	void GetAxleAxis( _3DMath::Vector& unitAxleAxis ) const;
+
+	double axleAngle;
+	Property< double > maxTorque;
+	Property< double > friction;
 
 private:
 
@@ -55,6 +57,8 @@ private:
 	_3DMath::ParticleSystem particleSystem;
 	_3DMath::TriangleMesh triangleMesh;
 	_3DMath::AxisAlignedBox boundingBox;
+
+	// TODO: Add inventory here?
 };
 
 typedef std::list< Blob* > BlobList;

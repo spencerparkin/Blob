@@ -84,6 +84,15 @@ bool Stage::Load( const wxString& stageFile )
 			if( !meshLoaded )
 				return false;
 
+			wxString attribStr = xmlNode->GetAttribute( "scale" );
+			double scale = 1.0;
+			if( !attribStr.IsEmpty() && attribStr.ToCDouble( &scale ) )
+			{
+				_3DMath::AffineTransform affineTransform;
+				affineTransform.linearTransform.SetScale( scale );
+				mesh.Transform( affineTransform );
+			}
+
 			if( !texture )
 			{
 				wxString textureFile = xmlNode->GetAttribute( "texture" );
@@ -226,6 +235,12 @@ void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 
 		_3DMath::Vector location;
 		blob->GetLocation( location );
+
+		// It doesn't happen too often, but if the simulation blows up, try to detect that and recover from it.
+		if( location.x != location.x || location.y != location.y || location.z != location.z )
+		{
+			//...
+		}
 
 		if( deathPlane.GetSide( location ) == _3DMath::Plane::SIDE_BACK )
 		{

@@ -43,6 +43,9 @@
     <ClCompile Include="Code\Stage.cpp">
       <Filter>Code</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Property.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Application.h">
@@ -79,6 +82,12 @@
       <Filter>Code</Filter>
     </ClInclude>
     <ClInclude Include="Code\Stage.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Property.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Property.hpp">
       <Filter>Code</Filter>
     </ClInclude>
   </ItemGroup>

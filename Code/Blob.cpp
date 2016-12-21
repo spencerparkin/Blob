@@ -8,14 +8,12 @@
 
 using namespace _3DMath;
 
-Blob::Blob( void )
+Blob::Blob( void ) : maxTorque( 5.0 ), friction( 1.0 )
 {
 	texture = nullptr;
 	driver = nullptr;
 
-	maxTorque = 5.0;
 	axleAngle = 0.0;
-	maxTurnRate = M_PI / 4.0;
 }
 
 /*virtual*/ Blob::~Blob( void )
@@ -52,7 +50,21 @@ void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 	if( driver )
 		driver->Drive( this, timeKeeper );
 
+	friction.Simulate( timeKeeper );
+	maxTorque.Simulate( timeKeeper );
+
 	triangleMesh.GenerateBoundingBox( boundingBox );
+
+	double particleFriction = 1.0;
+	friction.GetValue( particleFriction );
+
+	_3DMath::ObjectMap::iterator iter = particleSystem.particleCollection.objectMap->begin();
+	while( iter != particleSystem.particleCollection.objectMap->end() )
+	{
+		_3DMath::ParticleSystem::Particle* particle = ( _3DMath::ParticleSystem::Particle* )iter->second;
+		particle->friction = particleFriction;
+		iter++;
+	}
 
 	particleSystem.Simulate( timeKeeper );
 }

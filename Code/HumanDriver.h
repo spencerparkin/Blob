@@ -12,6 +12,8 @@ public:
 	virtual ~HumanDriver( void );
 
 	virtual void Drive( Blob* blob, const _3DMath::TimeKeeper& timeKeeper ) override;
+
+	double maxTurnRate;
 };
 
 // HumanDriver.h
