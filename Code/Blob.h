@@ -46,17 +46,20 @@ public:
 	double axleAngle;
 	Property< double > maxTorque;
 	Property< double > friction;
+	Property< double > gravity;
 
 private:
 
 	Texture* texture;
 
 	void AddSymmetricVertices( const _3DMath::Vector& vector );
-	void MakeSpring( int index0, int index1, std::vector< int >& particleIds, double stiffness );
+	void MakeSpring( int index0, int index1, std::vector< int >& particleHandles, double stiffness );
 
 	_3DMath::ParticleSystem particleSystem;
 	_3DMath::TriangleMesh triangleMesh;
 	_3DMath::AxisAlignedBox boundingBox;
+
+	int gravityForceHandle;
 
 	// TODO: Add inventory here?
 };

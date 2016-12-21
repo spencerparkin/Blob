@@ -155,7 +155,9 @@
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\HumanDriver.h" />
-    <ClInclude Include="Code\Race.h" />
+    <ClInclude Include="Code\Property.h" />
+    <ClInclude Include="Code\Property.hpp" />
+    <ClInclude Include="Code\Stage.h" />
     <ClInclude Include="Code\Texture.h" />
   </ItemGroup>
   <ItemGroup>
@@ -169,7 +171,8 @@
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\HumanDriver.cpp" />
-    <ClCompile Include="Code\Race.cpp" />
+    <ClCompile Include="Code\Property.cpp" />
+    <ClCompile Include="Code\Stage.cpp" />
     <ClCompile Include="Code\Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

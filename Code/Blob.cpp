@@ -8,8 +8,10 @@
 
 using namespace _3DMath;
 
-Blob::Blob( void ) : maxTorque( 5.0 ), friction( 1.0 )
+Blob::Blob( void ) : maxTorque( 5.0 ), friction( 1.0 ), gravity( -4.0 )
 {
+	gravityForceHandle = 0;
+
 	texture = nullptr;
 	driver = nullptr;
 
@@ -52,16 +54,21 @@ void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 
 	friction.Simulate( timeKeeper );
 	maxTorque.Simulate( timeKeeper );
+	gravity.Simulate( timeKeeper );
+
+	_3DMath::ParticleSystem::GravityForce* gravityForce = ( _3DMath::ParticleSystem::GravityForce* )_3DMath::HandleObject::Dereference( gravityForceHandle );
+	if( gravityForce )
+		gravity.GetValue( gravityForce->accelDueToGravity.y );
 
 	triangleMesh.GenerateBoundingBox( boundingBox );
 
 	double particleFriction = 1.0;
 	friction.GetValue( particleFriction );
 
-	_3DMath::ObjectMap::iterator iter = particleSystem.particleCollection.objectMap->begin();
-	while( iter != particleSystem.particleCollection.objectMap->end() )
+	_3DMath::ParticleSystem::ParticleList::iterator iter = particleSystem.particleList->begin();
+	while( iter != particleSystem.particleList->end() )
 	{
-		_3DMath::ParticleSystem::Particle* particle = ( _3DMath::ParticleSystem::Particle* )iter->second;
+		_3DMath::ParticleSystem::Particle* particle = ( _3DMath::ParticleSystem::Particle* )*iter;
 		particle->friction = particleFriction;
 		iter++;
 	}
@@ -135,7 +142,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 	triangleMesh.Transform( transform );
 	triangleMesh.CalculateNormals();
 
-	std::vector< int > particleIds;
+	std::vector< int > particleHandles;
 
 	for( int i = 0; i < ( int )triangleMesh.vertexArray->size(); i++ )
 	{
@@ -144,11 +151,9 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		particle->mesh = &triangleMesh;
 		particle->mass = 1.0;
 
-		particleSystem.particleCollection.AddObject( particle );
-
+		particleSystem.particleList->push_back( particle );
 		particle->GetPosition( particle->previousPosition );
-
-		particleIds.push_back( particle->id );
+		particleHandles.push_back( particle->GetHandle() );
 	}
 
 	TriangleMesh::EdgeSet edgeSet;
@@ -163,7 +168,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		int index0, index1;
 		TriangleMesh::GetEdgePair( edgePair, index0, index1 );
 
-		MakeSpring( index0, index1, particleIds, stiffness );
+		MakeSpring( index0, index1, particleHandles, stiffness );
 	}
 
 	edgeSet.clear();
@@ -187,7 +192,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 			TriangleMesh::EdgeSet::iterator iter = edgeSet.find( edgePair );
 			if( iter == edgeSet.end() )
 			{
-				MakeSpring( i, j, particleIds, stiffness );
+				MakeSpring( i, j, particleHandles, stiffness );
 				edgeSet.insert( edgePair );
 			}
 		}
@@ -195,7 +200,8 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 
 	ParticleSystem::GravityForce* gravityForce = new ParticleSystem::GravityForce( &particleSystem );
 	gravityForce->accelDueToGravity.Set( 0.0, -5.0, 0.0 );
-	particleSystem.forceCollection.AddObject( gravityForce );
+	particleSystem.forceList->push_back( gravityForce );
+	gravityForceHandle = gravityForce->GetHandle();
 }
 
 void Blob::Teleport( const _3DMath::AffineTransform& transform )
@@ -209,7 +215,7 @@ void Blob::RegisterTrackCollisionObject( _3DMath::BoundingBoxTree* boxTree, doub
 	ParticleSystem::BoundingBoxTreeCollisionObject* collisionObject = new ParticleSystem::BoundingBoxTreeCollisionObject();
 	collisionObject->boxTree = boxTree;
 	collisionObject->friction = friction;
-	particleSystem.collisionObjectCollection.AddObject( collisionObject );
+	particleSystem.collisionObjectList->push_back( collisionObject );
 }
 
 void Blob::AddSymmetricVertices( const Vector& vector )
@@ -234,14 +240,14 @@ void Blob::AddSymmetricVertices( const Vector& vector )
 	}
 }
 
-void Blob::MakeSpring( int index0, int index1, std::vector< int >& particleIds, double stiffness )
+void Blob::MakeSpring( int index0, int index1, std::vector< int >& particleHandles, double stiffness )
 {
 	Vector position0, position1;
 
-	ParticleSystem::Particle* particle0 = ( ParticleSystem::Particle* )particleSystem.particleCollection.FindObject( particleIds[ index0 ] );
+	ParticleSystem::Particle* particle0 = ( ParticleSystem::Particle* )HandleObject::Dereference( particleHandles[ index0 ] );
 	particle0->GetPosition( position0 );
 
-	ParticleSystem::Particle* particle1 = ( ParticleSystem::Particle* )particleSystem.particleCollection.FindObject( particleIds[ index1 ] );
+	ParticleSystem::Particle* particle1 = ( ParticleSystem::Particle* )HandleObject::Dereference( particleHandles[ index1 ] );
 	particle1->GetPosition( position1 );
 
 	Vector vector;
@@ -249,12 +255,12 @@ void Blob::MakeSpring( int index0, int index1, std::vector< int >& particleIds, 
 	double length = vector.Length();
 
 	ParticleSystem::SpringForce* springForce = new ParticleSystem::SpringForce( &particleSystem );
-	springForce->endPointParticleIds[0] = particle0->id;
-	springForce->endPointParticleIds[1] = particle1->id;
+	springForce->endPointParticleHandles[0] = particle0->GetHandle();
+	springForce->endPointParticleHandles[1] = particle1->GetHandle();
 	springForce->equilibriumLength = length;
 	springForce->stiffness = stiffness;
 
-	particleSystem.forceCollection.AddObject( springForce );
+	particleSystem.forceList->push_back( springForce );
 }
 
 // Blob.cpp

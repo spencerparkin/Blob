@@ -40,7 +40,7 @@ HumanDriver::HumanDriver( void )
 	double torqueMag = maxTorque * ( leftTriggerValue - rightTriggerValue );
 	torqueForce->torque.SetScaled( unitAxleAxis, torqueMag );
 	torqueForce->transient = true;
-	blob->GetParticleSystem()->forceCollection.AddObject( torqueForce );
+	blob->GetParticleSystem()->forceList->push_back( torqueForce );
 }
 
 // HumanDriver.cpp

@@ -77,6 +77,8 @@ void Camera::Update( const _3DMath::TimeKeeper& timeKeeper )
 			if( !subject )
 				break;
 
+			// TODO: Maybe increase or decrease following distance and hover height with left analog stick vertical motion?
+
 			_3DMath::AffineTransform targetTransform;
 			subject->GetLocation( targetTransform.translation );
 

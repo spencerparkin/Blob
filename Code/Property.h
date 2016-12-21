@@ -4,6 +4,7 @@
 
 #include "TimeKeeper.h"
 #include <Vector.h>
+#include <HandleObject.h>
 #include <list>
 
 template< typename Type > class Modifier;
@@ -27,7 +28,7 @@ protected:
 };
 
 template< typename Type >
-class Modifier		// TODO: Derive from object so that handles to us can be created.  I want to show modifiers in the UI.
+class Modifier : public _3DMath::HandleObject
 {
 public:
 
