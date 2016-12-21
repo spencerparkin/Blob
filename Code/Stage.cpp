@@ -8,7 +8,9 @@
 #include "Application.h"
 #include "Camera.h"
 #include "Frame.h"
+#include "Receptacle.h"
 #include <FileFormat.h>
+#include <ListFunctions.h>
 #include <wx/xml/xml.h>
 #include <wx/wfstream.h>
 #include <sstream>
@@ -26,13 +28,8 @@ Stage::Stage( void )
 
 void Stage::DeleteBlobList( void )
 {
-	while( blobList.size() > 0 )
-	{
-		BlobList::iterator iter = blobList.begin();
-		Blob* blob = *iter;
-		delete blob;
-		blobList.erase( iter );
-	}
+	_3DMath::FreeList< Blob >( blobList );
+	_3DMath::FreeList< Receptacle >( receptacleList );
 }
 
 bool Stage::Load( const wxString& stageFile )
@@ -54,7 +51,83 @@ bool Stage::Load( const wxString& stageFile )
 
 	for( wxXmlNode* xmlNode = xmlRootNode->GetChildren(); xmlNode; xmlNode = xmlNode->GetNext() )
 	{
-		if( xmlNode->GetName() == "DeathPlane" )
+		if( xmlNode->GetName() == "Receptacle" )
+		{
+			Receptacle* receptacle = nullptr;
+
+			wxString attribStr = xmlNode->GetAttribute( "type" );
+			if( attribStr == "StageComplete" )
+			{
+				receptacle = new StageCompleteReceptacle();
+			}
+			else if( attribStr == "TorqueBooster" || attribStr == "FrictionBooster" || attribStr == "GravityBooster" )
+			{
+				wxString inventoryType = attribStr;
+
+				InventoryItemReceptacle* inventoryItemReceptacle = new InventoryItemReceptacle();
+				receptacle = inventoryItemReceptacle;
+
+				double boostValue;
+				attribStr = xmlNode->GetAttribute( "boostValue" );
+				attribStr.ToCDouble( &boostValue );
+
+				double boostTime;
+				attribStr = xmlNode->GetAttribute( "boostTime" );
+				attribStr.ToCDouble( &boostTime );
+
+				double regenTime;
+				attribStr = xmlNode->GetAttribute( "regenTime" );
+				attribStr.ToCDouble( &regenTime );
+
+				inventoryItemReceptacle->regenerationRemainingResetTimeSeconds = regenTime;
+
+				if( inventoryType == "TorqueBooster" )
+				{
+					TorqueBoosterInventoryItem* torqueBoosterInventoryItem = new TorqueBoosterInventoryItem();
+					torqueBoosterInventoryItem->torqueBoost = boostValue;
+					torqueBoosterInventoryItem->torqueBoostTimeSeconds = boostTime;
+					inventoryItemReceptacle->templateItem = torqueBoosterInventoryItem;
+				}
+				else if( inventoryType == "FrictionBooster" )
+				{
+					FrictionBoosterInventoryItem* frictionBoosterInventoryItem = new FrictionBoosterInventoryItem();
+					frictionBoosterInventoryItem->frictionBoost = boostValue;
+					frictionBoosterInventoryItem->frictionBoostTimeSeconds = boostTime;
+					inventoryItemReceptacle->templateItem = frictionBoosterInventoryItem;
+				}
+				else if( inventoryType == "GravityBooster" )
+				{
+					GravityBoosterInventoryItem* gravityBoosterInventoryItem = new GravityBoosterInventoryItem();
+					gravityBoosterInventoryItem->gravityBoost = boostValue;
+					gravityBoosterInventoryItem->gravityBoostTimeSeconds = boostTime;
+					inventoryItemReceptacle->templateItem = gravityBoosterInventoryItem;
+				}
+			}
+			
+			if( receptacle )
+			{
+				_3DMath::Vector center, dimensions;
+
+				attribStr = xmlNode->GetAttribute( "x" );
+				attribStr.ToCDouble( &center.x );
+				attribStr = xmlNode->GetAttribute( "y" );
+				attribStr.ToCDouble( &center.y );
+				attribStr = xmlNode->GetAttribute( "z" );
+				attribStr.ToCDouble( &center.z );
+
+				attribStr = xmlNode->GetAttribute( "w" );
+				attribStr.ToCDouble( &dimensions.x );
+				attribStr = xmlNode->GetAttribute( "h" );
+				attribStr.ToCDouble( &dimensions.y );
+				attribStr = xmlNode->GetAttribute( "d" );
+				attribStr.ToCDouble( &dimensions.z );
+
+				receptacle->boundingVolume.SetCenterAndDimensions( center, dimensions );
+
+				receptacleList.push_back( receptacle );
+			}
+		}
+		else if( xmlNode->GetName() == "DeathPlane" )
 		{
 			_3DMath::Vector center( 0.0, 0.0, 0.0 );
 
@@ -196,6 +269,8 @@ bool Stage::Unload( void )
 
 void Stage::Render( _3DMath::Renderer& renderer )
 {
+	// TODO: We need a sky-dome that shows stars and the milky way that rotates slowly in random directions.
+
 	if( wxGetApp().frame->debugDrawFlags & Frame::DRAW_COLLISION_OBJECTS )
 	{
 		if( boxTree )
@@ -248,6 +323,12 @@ void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 			transform.translation.Subtract( respawnLocation, location );
 			blob->Teleport( transform );
 		}
+	}
+
+	for( ReceptacleList::iterator iter = receptacleList.begin(); iter != receptacleList.end(); iter++ )
+	{
+		Receptacle* receptacle = *iter;
+		receptacle->Simulate( timeKeeper, blobList );
 	}
 }
 

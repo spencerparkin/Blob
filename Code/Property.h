@@ -21,6 +21,8 @@ public:
 
 	void Simulate( const _3DMath::TimeKeeper& timeKeeper );
 
+	void AddModifier( void* modifier );
+
 protected:
 
 	Type baseValue;
@@ -49,8 +51,6 @@ public:
 
 	virtual bool Apply( double& value ) const override;
 
-private:
-
 	double delta;
 };
 
@@ -62,8 +62,6 @@ public:
 	virtual ~LengthModifier( void );
 
 	virtual bool Apply( _3DMath::Vector& value ) const override;
-
-private:
 
 	double delta;
 };

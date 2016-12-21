@@ -4,6 +4,7 @@
 
 #include <wx/string.h>
 #include "Blob.h"
+#include "Receptacle.h"
 #include <TriangleMesh.h>
 #include <Renderer.h>
 #include <BoundingBoxTree.h>
@@ -30,6 +31,7 @@ private:
 	void DeleteBlobList( void );
 
 	BlobList blobList;
+	ReceptacleList receptacleList;
 	Texture* texture;
 	_3DMath::Vector respawnLocation;
 	_3DMath::Plane deathPlane;

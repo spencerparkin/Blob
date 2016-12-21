@@ -74,4 +74,10 @@ void Property< Type >::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 	}
 }
 
+template< typename Type >
+void Property< Type >::AddModifier( void* modifier )
+{
+	modifierList.push_back( modifier );
+}
+
 // Property.hpp

@@ -87,7 +87,9 @@
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\HumanDriver.cpp" />
+    <ClCompile Include="Code\InventoryItem.cpp" />
     <ClCompile Include="Code\Property.cpp" />
+    <ClCompile Include="Code\Receptacle.cpp" />
     <ClCompile Include="Code\Stage.cpp" />
     <ClCompile Include="Code\Texture.cpp" />
   </ItemGroup>
@@ -102,8 +104,10 @@
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\HumanDriver.h" />
+    <ClInclude Include="Code\InventoryItem.h" />
     <ClInclude Include="Code\Property.h" />
     <ClInclude Include="Code\Property.hpp" />
+    <ClInclude Include="Code\Receptacle.h" />
     <ClInclude Include="Code\Stage.h" />
     <ClInclude Include="Code\Texture.h" />
   </ItemGroup>

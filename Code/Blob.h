@@ -9,6 +9,7 @@
 #include <AxisAlignedBox.h>
 #include "Camera.h"
 #include "Property.h"
+#include "InventoryItem.h"
 
 class Texture;
 class Driver;
@@ -48,6 +49,9 @@ public:
 	Property< double > friction;
 	Property< double > gravity;
 
+	InventoryItemList* inventoryItemList;
+	int occupiedReceptacleHandle;
+
 private:
 
 	Texture* texture;
@@ -60,10 +64,9 @@ private:
 	_3DMath::AxisAlignedBox boundingBox;
 
 	int gravityForceHandle;
-
-	// TODO: Add inventory here?
 };
 
 typedef std::list< Blob* > BlobList;
+typedef std::set< Blob* > BlobSet;
 
 // Blob.h

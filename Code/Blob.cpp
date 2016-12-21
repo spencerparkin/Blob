@@ -5,6 +5,8 @@
 #include "Driver.h"
 #include "Frame.h"
 #include "Application.h"
+#include "InventoryItem.h"
+#include <ListFunctions.h>
 
 using namespace _3DMath;
 
@@ -16,12 +18,19 @@ Blob::Blob( void ) : maxTorque( 5.0 ), friction( 1.0 ), gravity( -4.0 )
 	driver = nullptr;
 
 	axleAngle = 0.0;
+
+	inventoryItemList = new InventoryItemList();
+
+	occupiedReceptacleHandle = 0;
 }
 
 /*virtual*/ Blob::~Blob( void )
 {
+	_3DMath::FreeList< InventoryItem >( *inventoryItemList );
+
 	delete texture;
 	delete driver;
+	delete inventoryItemList;
 }
 
 void Blob::Render( _3DMath::Renderer& renderer )
