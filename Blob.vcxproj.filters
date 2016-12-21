@@ -49,6 +49,12 @@
     <ClInclude Include="Code\Stage.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Receptacle.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\InventoryItem.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
