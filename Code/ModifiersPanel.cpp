@@ -13,6 +13,7 @@ ModifiersPanel::ModifiersPanel( void )
 
 /*virtual*/ void ModifiersPanel::SetupPaneInfo( wxAuiPaneInfo& paneInfo )
 {
+	paneInfo.Bottom();
 }
 
 /*virtual*/ void ModifiersPanel::CreateControls( void )

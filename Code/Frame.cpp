@@ -64,6 +64,8 @@ Frame::Frame( void ) : wxFrame( 0, wxID_ANY, "Blob", wxDefaultPosition, wxSize( 
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_ModifiersPanelToggle );
 
 	TogglePanel( "Canvas" );
+	TogglePanel( "Inventory" );
+	TogglePanel( "Modifiers" );
 
 	timer.Start(1);
 }
