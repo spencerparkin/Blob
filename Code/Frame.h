@@ -39,6 +39,7 @@ private:
 		ID_DrawCollisionObjects,
 		ID_InventoryPanelToggle,
 		ID_ModifiersPanelToggle,
+		ID_SoundToggle,
 		ID_About,
 		ID_Timer,
 	};
@@ -50,6 +51,7 @@ private:
 	void OnToggleDrawCollisionObjects( wxCommandEvent& event );
 	void OnToggleInventoryPanel( wxCommandEvent& event );
 	void OnToggleModifiersPanel( wxCommandEvent& event );
+	void OnToggleSound( wxCommandEvent& event );
 	void OnUpdateUI( wxUpdateUIEvent& event );
 	void OnAbout( wxCommandEvent& event );
 

@@ -5,6 +5,7 @@
 #include "Controller.h"
 #include "Stage.h"
 #include "Canvas.h"
+#include "Sound.h"
 #include <wx/image.h>
 
 Application::Application( void )
@@ -12,12 +13,18 @@ Application::Application( void )
 	frame = nullptr;
 	controller = nullptr;
 	stage = nullptr;
+	sound = nullptr;
 }
 
 /*virtual*/ Application::~Application( void )
 {
 	delete controller;
 	delete stage;
+	
+	if( sound )
+		sound->Shutdown();
+
+	delete sound;
 }
 
 /*virtual*/ bool Application::OnInit( void )
@@ -26,6 +33,11 @@ Application::Application( void )
 		return false;
 
 	wxInitAllImageHandlers();
+
+	sound = new Sound();
+	if( !sound->Setup() )
+	{
+	}
 
 	controller = new XboxController();
 	if( !controller->SetupAndConnect() )

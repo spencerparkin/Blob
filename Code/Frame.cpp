@@ -7,6 +7,7 @@
 #include "CanvasPanel.h"
 #include "InventoryPanel.h"
 #include "ModifiersPanel.h"
+#include "Sound.h"
 #include "Camera.h"
 #include <wx/menu.h>
 #include <wx/sizer.h>
@@ -19,10 +20,13 @@ Frame::Frame( void ) : wxFrame( 0, wxID_ANY, "Blob", wxDefaultPosition, wxSize( 
 	auiManager = new wxAuiManager( this, wxAUI_MGR_LIVE_RESIZE | wxAUI_MGR_DEFAULT );
 
 	wxMenu* gameMenu = new wxMenu();
+	wxMenuItem* toggleSoundMenuItem = new wxMenuItem( gameMenu, ID_SoundToggle, "Sound", "Toggle the sound.", wxITEM_CHECK );
 	wxMenuItem* toggleFreeCamMenuItem = new wxMenuItem( gameMenu, ID_FreeCam, "Free Cam", "Toggle the free-cam.", wxITEM_CHECK );
 	wxMenuItem* drawForcesMenuItem = new wxMenuItem( gameMenu, ID_DrawForces, "Draw Forces", "Toggle the drawing of forces.", wxITEM_CHECK );
 	wxMenuItem* drawCollisionObjectsMenuItem = new wxMenuItem( gameMenu, ID_DrawCollisionObjects, "Draw Collision Objects", "Toggle the drawing of collision objects.", wxITEM_CHECK );
 	wxMenuItem* exitMenuItem = new wxMenuItem( gameMenu, ID_Exit, "Exit", "Exit the program." );
+	gameMenu->Append( toggleSoundMenuItem );
+	gameMenu->AppendSeparator();
 	gameMenu->Append( toggleFreeCamMenuItem );
 	gameMenu->AppendSeparator();
 	gameMenu->Append( drawForcesMenuItem );
@@ -56,12 +60,14 @@ Frame::Frame( void ) : wxFrame( 0, wxID_ANY, "Blob", wxDefaultPosition, wxSize( 
 	Bind( wxEVT_MENU, &Frame::OnToggleDrawCollisionObjects, this, ID_DrawCollisionObjects );
 	Bind( wxEVT_MENU, &Frame::OnToggleInventoryPanel, this, ID_InventoryPanelToggle );
 	Bind( wxEVT_MENU, &Frame::OnToggleModifiersPanel, this, ID_ModifiersPanelToggle );
+	Bind( wxEVT_MENU, &Frame::OnToggleSound, this, ID_SoundToggle );
 	Bind( wxEVT_TIMER, &Frame::OnTimer, this, ID_Timer );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_FreeCam );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawForces );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_DrawCollisionObjects );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_InventoryPanelToggle );
 	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_ModifiersPanelToggle );
+	Bind( wxEVT_UPDATE_UI, &Frame::OnUpdateUI, this, ID_SoundToggle );
 
 	TogglePanel( "Canvas" );
 	TogglePanel( "Inventory" );
@@ -127,7 +133,17 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 			event.Check( IsPanelInUse( "Modifiers" ) );
 			break;
 		}
+		case ID_SoundToggle:
+		{
+			event.Check( wxGetApp().sound->IsEnabled() );
+			break;
+		}
 	}
+}
+
+void Frame::OnToggleSound( wxCommandEvent& event )
+{
+	wxGetApp().sound->Enable( !wxGetApp().sound->IsEnabled() );
 }
 
 void Frame::OnToggleDrawForces( wxCommandEvent& event )

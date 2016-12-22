@@ -8,6 +8,7 @@ class Frame;
 class Controller;
 class Stage;
 class Camera;
+class Sound;
 
 class Application : public wxApp
 {
@@ -23,6 +24,7 @@ public:
 	Frame* frame;
 	Controller* controller;
 	Stage* stage;
+	Sound* sound;
 };
 
 wxDECLARE_APP( Application );
