@@ -20,10 +20,6 @@ Application::Application( void )
 {
 	delete controller;
 	delete stage;
-	
-	if( sound )
-		sound->Shutdown();
-
 	delete sound;
 }
 
@@ -35,9 +31,7 @@ Application::Application( void )
 	wxInitAllImageHandlers();
 
 	sound = new Sound();
-	if( !sound->Setup() )
-	{
-	}
+	sound->PlayMusic( "C:\\Blob\\Data\\piano_solo.mid" );
 
 	controller = new XboxController();
 	if( !controller->SetupAndConnect() )

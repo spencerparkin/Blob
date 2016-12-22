@@ -2,15 +2,8 @@
 
 #pragma once
 
-#include <math.h>
-#include <list>
 #include <wx/string.h>
-
-#ifdef WIN32
-#	include <SDL.h>
-#else
-#	include <SDL2/SDL.h>
-#endif //WIN32
+#include <SFML/Audio.hpp>
 
 class Sound
 {
@@ -19,59 +12,17 @@ public:
 	Sound( void );
 	virtual ~Sound( void );
 
-	bool Setup( void );
-	bool Shutdown( void );
-
-	bool ClearWaves( void );
-	bool LoadWave( const wxString& waveFile );
-	bool PlayWave( const wxString& waveName );
-
-	bool Enable( bool enable );
 	bool IsEnabled( void ) { return enabled; }
-	bool IsSetup( void ) { return setup; }
+	void SetEnabled( bool enabled ) { this->enabled = enabled; }
 
-	void SetMaxEffects( int maxEffects ) { this->maxEffects = maxEffects; }
-	int GetMaxEffects( void ) { return maxEffects; }
+	bool PlayMusic( const wxString& musicFile );
 
 private:
 
-	static void AudioCallback( void* userdata, Uint8* stream, int streamLen );
+	sf::SoundBuffer soundBuffer;		// Cache these?
+	sf::Sound sound;
+	sf::Music music;
 
-	void PullForAudio( Uint8* stream, int streamLen );
-
-	class Wave
-	{
-	public:
-		Wave( void );
-		virtual ~Wave( void );
-
-		bool Load( const wxString& waveFile );
-		bool Unload( void );
-
-		wxString name;
-		SDL_AudioSpec waveSpec;
-		Uint32 bufLen;
-		Uint8* buffer;
-	};
-
-	Wave* FindWave( const wxString& waveName );
-
-	typedef std::list< Wave* > WaveList;
-	WaveList waveList;
-
-	struct Effect
-	{
-		Wave* wave;
-		Uint32 offset;
-	};
-
-	typedef std::list< Effect > EffectList;
-	EffectList effectList;
-	int maxEffects;
-
-	SDL_AudioSpec audioSpec;
-	SDL_AudioDeviceID audioDeviceID;
-	bool setup;
 	bool enabled;
 };
 

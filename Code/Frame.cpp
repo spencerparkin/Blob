@@ -143,7 +143,7 @@ void Frame::OnUpdateUI( wxUpdateUIEvent& event )
 
 void Frame::OnToggleSound( wxCommandEvent& event )
 {
-	wxGetApp().sound->Enable( !wxGetApp().sound->IsEnabled() );
+	wxGetApp().sound->SetEnabled( !wxGetApp().sound->IsEnabled() );
 }
 
 void Frame::OnToggleDrawForces( wxCommandEvent& event )
