@@ -4,6 +4,7 @@
 
 #include <wx/frame.h>
 #include <wx/timer.h>
+#include <wx/aui/aui.h>
 
 class Canvas;
 
@@ -14,7 +15,7 @@ public:
 	Frame( void );
 	virtual ~Frame( void );
 
-	Canvas* GetCanvas( void ) { return canvas; }
+	Canvas* GetCanvas( void );
 
 	enum DebugDrawFlag
 	{
@@ -24,6 +25,10 @@ public:
 
 	int debugDrawFlags;
 
+	void UpdateAllPanels( void );
+	bool IsPanelInUse( const wxString& panelTitle, wxAuiPaneInfo** foundPaneInfo = nullptr );
+	bool TogglePanel( const wxString& panelTitle );
+
 private:
 
 	enum
@@ -32,6 +37,9 @@ private:
 		ID_FreeCam,
 		ID_DrawForces,
 		ID_DrawCollisionObjects,
+		ID_InventoryPanelToggle,
+		ID_ModifiersPanelToggle,
+		ID_About,
 		ID_Timer,
 	};
 
@@ -40,10 +48,11 @@ private:
 	void OnToggleFreeCam( wxCommandEvent& event );
 	void OnToggleDrawForces( wxCommandEvent& event );
 	void OnToggleDrawCollisionObjects( wxCommandEvent& event );
+	void OnToggleInventoryPanel( wxCommandEvent& event );
+	void OnToggleModifiersPanel( wxCommandEvent& event );
 	void OnUpdateUI( wxUpdateUIEvent& event );
 
-	Canvas* canvas;
-
+	wxAuiManager* auiManager;
 	wxTimer timer;
 };
 

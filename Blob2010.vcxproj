@@ -81,6 +81,7 @@
     <ClCompile Include="Code\Blob.cpp" />
     <ClCompile Include="Code\Camera.cpp" />
     <ClCompile Include="Code\Canvas.cpp" />
+    <ClCompile Include="Code\CanvasPanel.cpp" />
     <ClCompile Include="Code\ComputerDriver.cpp" />
     <ClCompile Include="Code\Controller.cpp" />
     <ClCompile Include="Code\Driver.cpp" />
@@ -88,6 +89,9 @@
     <ClCompile Include="Code\GLRenderer.cpp" />
     <ClCompile Include="Code\HumanDriver.cpp" />
     <ClCompile Include="Code\InventoryItem.cpp" />
+    <ClCompile Include="Code\InventoryPanel.cpp" />
+    <ClCompile Include="Code\ModifiersPanel.cpp" />
+    <ClCompile Include="Code\Panel.cpp" />
     <ClCompile Include="Code\Property.cpp" />
     <ClCompile Include="Code\Receptacle.cpp" />
     <ClCompile Include="Code\Stage.cpp" />
@@ -98,6 +102,7 @@
     <ClInclude Include="Code\Blob.h" />
     <ClInclude Include="Code\Camera.h" />
     <ClInclude Include="Code\Canvas.h" />
+    <ClInclude Include="Code\CanvasPanel.h" />
     <ClInclude Include="Code\ComputerDriver.h" />
     <ClInclude Include="Code\Controller.h" />
     <ClInclude Include="Code\Driver.h" />
@@ -105,6 +110,9 @@
     <ClInclude Include="Code\GLRenderer.h" />
     <ClInclude Include="Code\HumanDriver.h" />
     <ClInclude Include="Code\InventoryItem.h" />
+    <ClInclude Include="Code\InventoryPanel.h" />
+    <ClInclude Include="Code\ModifiersPanel.h" />
+    <ClInclude Include="Code\Panel.h" />
     <ClInclude Include="Code\Property.h" />
     <ClInclude Include="Code\Property.hpp" />
     <ClInclude Include="Code\Receptacle.h" />
