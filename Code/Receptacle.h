@@ -77,4 +77,17 @@ public:
 	_3DMath::Vector targetLocation;
 };
 
+class ChangeShapeReceptacle : public Receptacle
+{
+public:
+
+	ChangeShapeReceptacle( void );
+	virtual ~ChangeShapeReceptacle( void );
+
+	virtual void EnterBlob( Blob* blob ) override;
+	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper ) override;
+
+	//...
+};
+
 // Receptacle.h

@@ -158,4 +158,24 @@ TeleportReceptacle::TeleportReceptacle( void )
 {
 }
 
+//------------------------------------------------------------------------------------------
+//                                 ChangeShapeReceptacle
+//------------------------------------------------------------------------------------------
+
+ChangeShapeReceptacle::ChangeShapeReceptacle( void )
+{
+}
+
+/*virtual*/ ChangeShapeReceptacle::~ChangeShapeReceptacle( void )
+{
+}
+
+/*virtual*/ void ChangeShapeReceptacle::EnterBlob( Blob* blob )
+{
+}
+
+/*virtual*/ void ChangeShapeReceptacle::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )
+{
+}
+
 // Receptacle.cpp

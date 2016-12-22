@@ -10,6 +10,7 @@
 #include "Camera.h"
 #include <wx/menu.h>
 #include <wx/sizer.h>
+#include <wx/aboutdlg.h>
 
 Frame::Frame( void ) : wxFrame( 0, wxID_ANY, "Blob", wxDefaultPosition, wxSize( 700, 700 ) ), timer( this, ID_Timer )
 {
@@ -49,6 +50,7 @@ Frame::Frame( void ) : wxFrame( 0, wxID_ANY, "Blob", wxDefaultPosition, wxSize( 
 	SetStatusBar( statusBar );
 
 	Bind( wxEVT_MENU, &Frame::OnExit, this, ID_Exit );
+	Bind( wxEVT_MENU, &Frame::OnAbout, this, ID_About );
 	Bind( wxEVT_MENU, &Frame::OnToggleFreeCam, this, ID_FreeCam );
 	Bind( wxEVT_MENU, &Frame::OnToggleDrawForces, this, ID_DrawForces );
 	Bind( wxEVT_MENU, &Frame::OnToggleDrawCollisionObjects, this, ID_DrawCollisionObjects );
@@ -70,6 +72,19 @@ Frame::Frame( void ) : wxFrame( 0, wxID_ANY, "Blob", wxDefaultPosition, wxSize( 
 {
 	auiManager->UnInit();
 	delete auiManager;
+}
+
+void Frame::OnAbout( wxCommandEvent& event )
+{
+	wxAboutDialogInfo aboutDialogInfo;
+	
+	aboutDialogInfo.SetName( "Blob" );
+	aboutDialogInfo.SetVersion( "1.0" );
+	aboutDialogInfo.SetDescription( "This program is free software and distributed under the MIT license." );
+	aboutDialogInfo.SetCopyright( "Copyright (C) 2017, Spencer T. Parkin (spencertparkin@gmail.com)" );
+	//aboutDialogInfo.SetWebSite( "http://spencerparkin.github.io/Blob" );
+
+	wxAboutBox( aboutDialogInfo );
 }
 
 void Frame::OnToggleFreeCam( wxCommandEvent& event )

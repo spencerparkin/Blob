@@ -51,6 +51,7 @@ private:
 	void OnToggleInventoryPanel( wxCommandEvent& event );
 	void OnToggleModifiersPanel( wxCommandEvent& event );
 	void OnUpdateUI( wxUpdateUIEvent& event );
+	void OnAbout( wxCommandEvent& event );
 
 	wxAuiManager* auiManager;
 	wxTimer timer;

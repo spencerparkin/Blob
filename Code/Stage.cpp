@@ -314,7 +314,7 @@ void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 		// It doesn't happen too often, but if the simulation blows up, try to detect that and recover from it.
 		if( location.x != location.x || location.y != location.y || location.z != location.z )
 		{
-			//...
+			// TODO: Do this how the ChangeShapeReceptacle class does it, I presume.
 		}
 
 		if( deathPlane.GetSide( location ) == _3DMath::Plane::SIDE_BACK )
