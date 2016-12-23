@@ -18,6 +18,7 @@ ModifiersPanel::ModifiersPanel( void )
 
 /*virtual*/ void ModifiersPanel::CreateControls( void )
 {
+	// TODO: Listen for property modifier messages.
 }
 
 /*virtual*/ void ModifiersPanel::Update( void )
