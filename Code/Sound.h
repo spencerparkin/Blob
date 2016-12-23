@@ -15,6 +15,8 @@ public:
 	bool IsEnabled( void ) { return enabled; }
 	void SetEnabled( bool enabled ) { this->enabled = enabled; }
 
+	//void Update( const _3DMath::TimeKeeper& timeKeeper );
+
 	bool PlayMusic( const wxString& musicFile );
 
 private:

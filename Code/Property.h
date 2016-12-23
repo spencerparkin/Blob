@@ -10,7 +10,7 @@
 template< typename Type > class Modifier;
 
 template< typename Type >
-class Property
+class Property : public _3DMath::HandleObject
 {
 public:
 

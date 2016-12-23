@@ -8,6 +8,7 @@
 #include "InventoryPanel.h"
 #include "ModifiersPanel.h"
 #include "Sound.h"
+#include "Message.h"
 #include "Camera.h"
 #include <wx/menu.h>
 #include <wx/sizer.h>
@@ -165,6 +166,8 @@ void Frame::OnExit( wxCommandEvent& event )
 
 void Frame::OnTimer( wxTimerEvent& event )
 {
+	wxGetApp().messageSystem->DispatchAllMessages();
+
 	UpdateAllPanels();
 }
 

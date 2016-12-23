@@ -7,6 +7,7 @@
 
 class GLRenderer;
 class Camera;
+class Message;
 
 class Canvas : public wxGLCanvas
 {
@@ -20,6 +21,8 @@ public:
 	void Advance( void );
 
 	Camera* GetCamera( void ) { return camera; }
+
+	void StageCompleteMessageHandler( Message* message );
 
 private:
 

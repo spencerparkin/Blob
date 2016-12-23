@@ -6,6 +6,7 @@
 #include "Stage.h"
 #include "Canvas.h"
 #include "Sound.h"
+#include "Message.h"
 #include <wx/image.h>
 
 Application::Application( void )
@@ -14,6 +15,7 @@ Application::Application( void )
 	controller = nullptr;
 	stage = nullptr;
 	sound = nullptr;
+	messageSystem = nullptr;
 }
 
 /*virtual*/ Application::~Application( void )
@@ -21,6 +23,7 @@ Application::Application( void )
 	delete controller;
 	delete stage;
 	delete sound;
+	delete messageSystem;
 }
 
 /*virtual*/ bool Application::OnInit( void )
@@ -30,8 +33,9 @@ Application::Application( void )
 
 	wxInitAllImageHandlers();
 
+	messageSystem = new MessageSystem();
+
 	sound = new Sound();
-	sound->PlayMusic( "C:\\Blob\\Data\\piano_solo.mid" );
 
 	controller = new XboxController();
 	if( !controller->SetupAndConnect() )

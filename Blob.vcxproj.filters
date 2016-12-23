@@ -73,6 +73,9 @@
     <ClInclude Include="Code\Sound.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Message.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -133,6 +136,9 @@
       <Filter>Code</Filter>
     </ClCompile>
     <ClCompile Include="Code\Sound.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Message.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>

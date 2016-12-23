@@ -158,6 +158,7 @@
     <ClInclude Include="Code\HumanDriver.h" />
     <ClInclude Include="Code\InventoryItem.h" />
     <ClInclude Include="Code\InventoryPanel.h" />
+    <ClInclude Include="Code\Message.h" />
     <ClInclude Include="Code\ModifiersPanel.h" />
     <ClInclude Include="Code\Panel.h" />
     <ClInclude Include="Code\Property.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Code\HumanDriver.cpp" />
     <ClCompile Include="Code\InventoryItem.cpp" />
     <ClCompile Include="Code\InventoryPanel.cpp" />
+    <ClCompile Include="Code\Message.cpp" />
     <ClCompile Include="Code\ModifiersPanel.cpp" />
     <ClCompile Include="Code\Panel.cpp" />
     <ClCompile Include="Code\Property.cpp" />

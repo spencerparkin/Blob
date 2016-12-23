@@ -3,6 +3,8 @@
 #include "InventoryItem.h"
 #include "Property.h"
 #include "Blob.h"
+#include "Message.h"
+#include "Application.h"
 
 //------------------------------------------------------------------------------------------
 //                                      InventoryItem
@@ -36,7 +38,9 @@ TorqueBoosterInventoryItem::TorqueBoosterInventoryItem( void )
 
 /*virtual*/ void TorqueBoosterInventoryItem::Use( Blob* blob )
 {
-	blob->maxTorque.AddModifier( new AddModifier( torqueBoost, torqueBoostTimeSeconds ) );
+	AddModifier* addModifier = new AddModifier( torqueBoost, torqueBoostTimeSeconds );
+	blob->maxTorque.AddModifier( addModifier );
+	wxGetApp().messageSystem->SendAMessage( new PropertyModifiedMessage( blob->GetHandle(), blob->maxTorque.GetHandle(), addModifier->GetHandle() ) );
 }
 
 /*virtual*/ _3DMath::HandleObject* TorqueBoosterInventoryItem::Clone( void ) const
@@ -67,7 +71,9 @@ GravityBoosterInventoryItem::GravityBoosterInventoryItem( void )
 
 /*virtual*/ void GravityBoosterInventoryItem::Use( Blob* blob )
 {
-	blob->gravity.AddModifier( new AddModifier( gravityBoost, gravityBoostTimeSeconds ) );
+	AddModifier* addModifier = new AddModifier( gravityBoost, gravityBoostTimeSeconds );
+	blob->gravity.AddModifier( addModifier );
+	wxGetApp().messageSystem->SendAMessage( new PropertyModifiedMessage( blob->GetHandle(), blob->gravity.GetHandle(), addModifier->GetHandle() ) );
 }
 
 /*virtual*/ _3DMath::HandleObject* GravityBoosterInventoryItem::Clone( void ) const
@@ -98,7 +104,9 @@ FrictionBoosterInventoryItem::FrictionBoosterInventoryItem( void )
 
 /*virtual*/ void FrictionBoosterInventoryItem::Use( Blob* blob )
 {
-	blob->friction.AddModifier( new AddModifier( frictionBoost, frictionBoostTimeSeconds ) );
+	AddModifier* addModifier = new AddModifier( frictionBoost, frictionBoostTimeSeconds );
+	blob->friction.AddModifier( addModifier );
+	wxGetApp().messageSystem->SendAMessage( new PropertyModifiedMessage( blob->GetHandle(), blob->friction.GetHandle(), addModifier->GetHandle() ) );
 }
 
 /*virtual*/ _3DMath::HandleObject* FrictionBoosterInventoryItem::Clone( void ) const

@@ -10,11 +10,12 @@
 #include "Camera.h"
 #include "Property.h"
 #include "InventoryItem.h"
+#include "HandleObject.h"
 
 class Texture;
 class Driver;
 
-class Blob : public Camera::Subject
+class Blob : public Camera::Subject, public _3DMath::HandleObject
 {
 public:
 

@@ -2,6 +2,8 @@
 
 #include "Receptacle.h"
 #include "InventoryItem.h"
+#include "Message.h"
+#include "Application.h"
 
 //------------------------------------------------------------------------------------------
 //                                       Receptacle
@@ -79,7 +81,8 @@ StageCompleteReceptacle::StageCompleteReceptacle( void )
 
 /*virtual*/ void StageCompleteReceptacle::EnterBlob( Blob* blob )
 {
-	// TODO: Send a message to the main application to advance the stage.  We can't do that work here, because of the call-stack.
+	// TODO: Send only if the given blob has all needed orbs in its inventory?
+	wxGetApp().messageSystem->SendAMessage( new StageCompleteMessage() );
 }
 
 /*virtual*/ void StageCompleteReceptacle::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )

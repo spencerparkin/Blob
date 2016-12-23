@@ -6,6 +6,7 @@
 #include "Stage.h"
 #include "Camera.h"
 #include "Controller.h"
+#include "Message.h"
 
 int Canvas::attributeList[] = { WX_GL_RGBA, WX_GL_DOUBLEBUFFER, WX_GL_DEPTH_SIZE, 16, 0 };
 
@@ -19,6 +20,10 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 
 	Bind( wxEVT_PAINT, &Canvas::OnPaint, this );
 	Bind( wxEVT_SIZE, &Canvas::OnSize, this );
+
+	// TODO: Figure this out.
+	//MessageSystem::MessageHandler messageHandler = std::bind( &Canvas::StageCompleteMessageHandler, *this, std::placeholders::_1 );
+	//wxGetApp().messageSystem->RegisterMessageHandler( "StageComplete", messageHandler );
 }
 
 /*virtual*/ Canvas::~Canvas( void )
@@ -26,6 +31,10 @@ Canvas::Canvas( wxWindow* parent ) : wxGLCanvas( parent, wxID_ANY, attributeList
 	delete context;
 	delete renderer;
 	delete camera;
+}
+
+void Canvas::StageCompleteMessageHandler( Message* message )
+{
 }
 
 void Canvas::BindContext( void )
