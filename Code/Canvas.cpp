@@ -79,7 +79,7 @@ void Canvas::OnPaint( wxPaintEvent& event )
 
 	camera->SetupOpenGLViewingMatrices();
 
-	wxGetApp().stage->Render( *renderer );
+	wxGetApp().stage->Render( *renderer, timeKeeper );
 
 	glFlush();
 

@@ -267,7 +267,7 @@ bool Stage::Unload( void )
 	return true;
 }
 
-void Stage::Render( _3DMath::Renderer& renderer )
+void Stage::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )
 {
 	// TODO: We need a sky-dome that shows stars and the milky way that rotates slowly in random directions.
 
@@ -298,6 +298,12 @@ void Stage::Render( _3DMath::Renderer& renderer )
 	{
 		Blob* blob = *iter;
 		blob->Render( renderer );
+	}
+
+	for( ReceptacleList::iterator iter = receptacleList.begin(); iter != receptacleList.end(); iter++ )
+	{
+		Receptacle* receptacle = *iter;
+		receptacle->Render( renderer, timeKeeper );
 	}
 }
 

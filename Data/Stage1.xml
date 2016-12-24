@@ -1,10 +1,10 @@
 <Stage>
-	<Mesh texture="Stage1.png" geometry="Stage1.obj" scale="2.0"/>
+	<Mesh texture="Stage1.png" geometry="Stage1.obj" scale="1.0"/>
 	<Blob driver="human" scale="1.0" type="icosahedron" subDivide="0" x="40.5" y="7.0" z="4.0"/>
 	<Blob driver="computer" scale="1.0" type="hexadron" subDivide="0" x="48.0" y="7.0" z="4.0"/>
 	<DeathPlane y="-100.0"/>
-	<Receptacle type="StageComplete" x="0" y="0" z="0" w="10" h="10" d="10"/>
-	<Receptacle type="TorqueBooster" x="0" y="0" z="0" w="10" h="10" d="10" boostValue="4" boostTime="30" regenTime="20"/>
-	<Receptacle type="FrictionBooster" x="0" y="0" z="0" w="10" h="10" d="10" boostValue="2" boostTime="30" regenTime="20"/>
-	<Receptacle type="GravityBooster" x="0" y="0" z="0" w="10" h="10" d="10" boostValue="-2" boostTime="30" regenTime="20"/>
+	<!--<Receptacle type="StageComplete" x="-19.6" y="11" z="7" w="10" h="10" d="10"/>-->
+	<Receptacle type="TorqueBooster" x="-26.7" y="0.86" z="6.6" w="10" h="10" d="10" boostValue="4" boostTime="30" regenTime="20"/>
+	<!--<Receptacle type="FrictionBooster" x="-25.5" y="2.52" z="12.91" w="10" h="10" d="10" boostValue="2" boostTime="30" regenTime="20"/>
+	<Receptacle type="GravityBooster" x="-27.6" y="3.9" z="-12.48" w="10" h="10" d="10" boostValue="-2" boostTime="30" regenTime="20"/>-->
 </Stage>

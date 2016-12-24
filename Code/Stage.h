@@ -23,7 +23,7 @@ public:
 	bool Load( const wxString& stageFile );
 	bool Unload( void );
 
-	void Render( _3DMath::Renderer& renderer );
+	void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper );
 	void Simulate( const _3DMath::TimeKeeper& timeKeeper );
 
 private:

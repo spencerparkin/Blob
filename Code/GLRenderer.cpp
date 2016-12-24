@@ -36,17 +36,19 @@ GLRenderer::GLRenderer( void )
 	glEnd();
 }
 
-/*virtual*/ void GLRenderer::IssueVertex( const _3DMath::Vertex& vertex )
+/*virtual*/ void GLRenderer::IssueVertex( const _3DMath::Vertex& vertex, int vertexFlags )
 {
-	glTexCoord2d( vertex.texCoords.x, vertex.texCoords.y );
+	if( vertexFlags & VTX_FLAG_TEXCOORDS )
+		glTexCoord2d( vertex.texCoords.x, vertex.texCoords.y );
 
-	if( vertex.normal.Length() > 0.5 )
+	if( ( vertexFlags & VTX_FLAG_NORMAL ) && vertex.normal.Length() > 0.5 )
 		glNormal3d( vertex.normal.x, vertex.normal.y, vertex.normal.z );
 
-	if( !( vertex.color.x == 0.0 && vertex.color.y == 0.0 && vertex.color.z == 0.0 ) )
+	if( ( vertexFlags & VTX_FLAG_COLOR ) && !( vertex.color.x == 0.0 && vertex.color.y == 0.0 && vertex.color.z == 0.0 ) )
 		glColor4d( vertex.color.x, vertex.color.y, vertex.color.z, vertex.alpha );
 
-	glVertex3d( vertex.position.x, vertex.position.y, vertex.position.z );
+	if( vertexFlags & VTX_FLAG_POSITION )
+		glVertex3d( vertex.position.x, vertex.position.y, vertex.position.z );
 }
 
 /*virtual*/ void GLRenderer::Color( const _3DMath::Vector& color, double alpha )

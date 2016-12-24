@@ -133,6 +133,8 @@ InventoryItemReceptacle::InventoryItemReceptacle( void )
 
 /*virtual*/ void InventoryItemReceptacle::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )
 {
+	// TODO: Forgo rendering if our bounding box is not visible?
+
 	_3DMath::AffineTransform transform;
 	boundingVolume.GetCenter( transform.translation );
 

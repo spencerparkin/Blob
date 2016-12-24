@@ -102,7 +102,7 @@ void Frame::OnToggleFreeCam( wxCommandEvent& event )
 	if( camera->mode != Camera::MODE_FREE_CAM )
 		camera->mode = Camera::MODE_FREE_CAM;
 	else
-		camera->mode = Camera::MODE_FOLLOW_SUBJECT;
+		camera->mode = Camera::MODE_FOLLOW_BEHIND_SUBJECT;
 }
 
 void Frame::OnUpdateUI( wxUpdateUIEvent& event )

@@ -5,6 +5,9 @@
 #include <HandleObject.h>
 #include <TimeKeeper.h>
 #include <AffineTransform.h>
+#include <TriangleMesh.h>
+#include <BspTree.h>
+#include <wx/string.h>
 
 class Blob;
 
@@ -23,14 +26,34 @@ typedef InventoryItem* ( *InventoryItemCreateFunc )( void );
 
 typedef std::list< InventoryItem* > InventoryItemList;
 
-class TorqueBoosterInventoryItem : public InventoryItem
+class BspTreeInventoryItem : public InventoryItem
+{
+public:
+
+	BspTreeInventoryItem( void );
+	virtual ~BspTreeInventoryItem( void );
+
+	virtual wxString GetMeshFile( void ) const = 0;
+
+	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper, const _3DMath::AffineTransform& transform ) const override;
+
+	bool LoadBspTree( const wxString& inventoryItemMeshFile ) const;
+
+	mutable double rotationAngle;
+	mutable double rotationRate;
+	mutable double alpha;
+	mutable _3DMath::Vector color;
+	mutable _3DMath::BspTree* bspTree;
+};
+
+class TorqueBoosterInventoryItem : public BspTreeInventoryItem
 {
 public:
 
 	TorqueBoosterInventoryItem( void );
 	virtual ~TorqueBoosterInventoryItem( void );
 
-	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper, const _3DMath::AffineTransform& transform ) const override;
+	virtual wxString GetMeshFile( void ) const override;
 	virtual void Use( Blob* blob ) override;
 	virtual _3DMath::HandleObject* Clone( void ) const override;
 
@@ -38,14 +61,14 @@ public:
 	double torqueBoostTimeSeconds;
 };
 
-class GravityBoosterInventoryItem : public InventoryItem
+class GravityBoosterInventoryItem : public BspTreeInventoryItem
 {
 public:
 
 	GravityBoosterInventoryItem( void );
 	virtual ~GravityBoosterInventoryItem( void );
 
-	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper, const _3DMath::AffineTransform& transform ) const override;
+	virtual wxString GetMeshFile( void ) const override;
 	virtual void Use( Blob* blob ) override;
 	virtual _3DMath::HandleObject* Clone( void ) const override;
 
@@ -53,14 +76,14 @@ public:
 	double gravityBoostTimeSeconds;
 };
 
-class FrictionBoosterInventoryItem : public InventoryItem
+class FrictionBoosterInventoryItem : public BspTreeInventoryItem
 {
 public:
 
 	FrictionBoosterInventoryItem( void );
 	virtual ~FrictionBoosterInventoryItem( void );
 
-	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper, const _3DMath::AffineTransform& transform ) const override;
+	virtual wxString GetMeshFile( void ) const override;
 	virtual void Use( Blob* blob ) override;
 	virtual _3DMath::HandleObject* Clone( void ) const override;
 
