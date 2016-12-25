@@ -10,6 +10,7 @@ class Stage;
 class Camera;
 class Sound;
 class MessageSystem;
+class ModelCache;
 
 class Application : public wxApp
 {
@@ -27,6 +28,7 @@ public:
 	Stage* stage;
 	Sound* sound;
 	MessageSystem* messageSystem;
+	ModelCache* modelCache;
 };
 
 wxDECLARE_APP( Application );

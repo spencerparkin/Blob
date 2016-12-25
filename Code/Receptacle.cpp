@@ -109,6 +109,11 @@ InventoryItemReceptacle::InventoryItemReceptacle( void )
 
 /*virtual*/ void InventoryItemReceptacle::Simulate( const _3DMath::TimeKeeper& timeKeeper, BlobList& blobList )
 {
+	if( inventoryItem )
+	{
+		// TODO: Calculate bounding volume from mesh of inventory item?
+	}
+
 	if( !inventoryItem && templateItem )
 	{
 		regenerationRemainingTimeSeconds -= timeKeeper.GetDeltaTimeSeconds();

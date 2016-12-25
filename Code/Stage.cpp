@@ -9,16 +9,12 @@
 #include "Camera.h"
 #include "Frame.h"
 #include "Receptacle.h"
-#include <FileFormat.h>
 #include <ListFunctions.h>
 #include <wx/xml/xml.h>
 #include <wx/wfstream.h>
-#include <sstream>
 
 Stage::Stage( void )
 {
-	texture = nullptr;
-	boxTree = nullptr;
 }
 
 /*virtual*/ Stage::~Stage( void )
@@ -26,16 +22,12 @@ Stage::Stage( void )
 	( void )Unload();
 }
 
-void Stage::DeleteBlobList( void )
-{
-	_3DMath::FreeList< Blob >( blobList );
-	_3DMath::FreeList< Receptacle >( receptacleList );
-}
-
 bool Stage::Load( const wxString& stageFile )
 {
 	if( !Unload() )
 		return false;
+
+	wxGetApp().modelCache->Clear();
 
 	wxFileInputStream stageFileStream( stageFile );
 	if( !stageFileStream.IsOk() )
@@ -137,63 +129,17 @@ bool Stage::Load( const wxString& stageFile )
 
 			deathPlane.SetCenterAndNormal( center, _3DMath::Vector( 0.0, 1.0, 0.0 ) );
 		}
-		else if( xmlNode->GetName() == "Mesh" )
+		else if( xmlNode->GetName() == "Ground" )
 		{
-			wxString geometryFile = xmlNode->GetAttribute( "geometry" );
-			if( geometryFile.IsEmpty() )
+			wxString modelName = xmlNode->GetAttribute( "model" );
+			if( modelName.IsEmpty() )
 				return false;
 
-			wxString meshData;
-			wxFile file( "Data/" + geometryFile );
-			if( !file.ReadAll( &meshData ) )
+			Model* model = wxGetApp().modelCache->GetModel( ( const char* )modelName.c_str(), ModelCache::MODEL_TYPE_GROUND );
+			if( !model )
 				return false;
 
-			std::stringstream meshDataStream;
-			meshDataStream << meshData.c_str();
-
-			_3DMath::FileFormat* format = _3DMath::FileFormat::CreateForFile( ( const char* )geometryFile.c_str() );
-			bool meshLoaded = format->LoadTriangleMesh( mesh, meshDataStream );
-			delete format;
-			if( !meshLoaded )
-				return false;
-
-			wxString attribStr = xmlNode->GetAttribute( "scale" );
-			double scale = 1.0;
-			if( !attribStr.IsEmpty() && attribStr.ToCDouble( &scale ) )
-			{
-				_3DMath::AffineTransform affineTransform;
-				affineTransform.linearTransform.SetScale( scale );
-				mesh.Transform( affineTransform );
-			}
-
-			if( !texture )
-			{
-				wxString textureFile = xmlNode->GetAttribute( "texture" );
-				if( !textureFile.IsEmpty() )
-				{
-					texture = new Texture();
-					if( !texture->Load( "Data/" + textureFile ) )
-						return false;
-				}
-			}
-
-			if( !boxTree )
-			{
-				_3DMath::AxisAlignedBox boundingBox;
-				if( mesh.GenerateBoundingBox( boundingBox ) )
-				{
-					boxTree = new _3DMath::BoundingBoxTree();
-					boxTree->GenerateNodes( boundingBox, 5 );
-
-					_3DMath::TriangleList triangleList;
-					mesh.GenerateTriangleList( triangleList );
-
-					_3DMath::Vector normalFilter( 0.0, 1.0, 0.0 );
-					double angleFilter = M_PI / 2.0;
-					if( !boxTree->InsertTriangleList( triangleList, &normalFilter, angleFilter ) )
-						return false;
-				}
-			}
+			groundList.push_back( ( const char* )modelName.c_str() );
 		}
 		else if( xmlNode->GetName() == "Blob" )
 		{
@@ -244,7 +190,13 @@ bool Stage::Load( const wxString& stageFile )
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
 	{
 		Blob* blob = *iter;
-		blob->RegisterTrackCollisionObject( boxTree, 1.0 );
+
+		for( ModelNameList::iterator groundIter = groundList.begin(); groundIter != groundList.end(); groundIter++ )
+		{
+			GroundModel* groundModel = ( GroundModel* )wxGetApp().modelCache->GetModel( *groundIter );
+
+			blob->RegisterGroundCollisionObject( groundModel->boxTree, 1.0 );
+		}
 	}
 
 	// TODO: Load spline data from XML.  This helps AI blobs blob-around the stage.
@@ -254,15 +206,10 @@ bool Stage::Load( const wxString& stageFile )
 
 bool Stage::Unload( void )
 {
-	DeleteBlobList();
+	_3DMath::FreeList< Blob >( blobList );
+	_3DMath::FreeList< Receptacle >( receptacleList );
 
-	mesh.Clear();
-
-	delete texture;
-	texture = nullptr;
-
-	delete boxTree;
-	boxTree = nullptr;
+	groundList.clear();
 
 	return true;
 }
@@ -270,28 +217,16 @@ bool Stage::Unload( void )
 void Stage::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )
 {
 	// TODO: We need a sky-dome that shows stars and the milky way that rotates slowly in random directions.
+	// TODO: Shadows by rendering from light-source perspective into off-screen depth map and then using that in a shader?
 
-	if( wxGetApp().frame->debugDrawFlags & Frame::DRAW_COLLISION_OBJECTS )
+	for( ModelNameList::iterator iter = groundList.begin(); iter != groundList.end(); iter++ )
 	{
-		if( boxTree )
+		Model* model = wxGetApp().modelCache->GetModel( *iter );
+		if( model )
 		{
-			glDisable( GL_TEXTURE_2D );
-			renderer.random.Seed(0);
-			renderer.DrawBoundingBoxTree( *boxTree, _3DMath::Renderer::DRAW_BOXES | _3DMath::Renderer::DRAW_TRIANGLES );
+			// TODO: Only render if mesh at least partially visible in frustum?
+			model->Render( renderer );
 		}
-	}
-	else
-	{
-		if( texture )
-			texture->Bind();
-
-		// TODO: To implement track mesh self-shadowing, we would have to figure out
-		//       a way to render the scene from the light-source perspective to generate
-		//       an off-screen depth-map.  This map would then be passed to the shader
-		//       that will get used to render the mesh.  It's worth trying to figure out.
-		//       Note that this would also handle blob shadowing for us.  Look up "Framebuffer Objects."
-
-		renderer.DrawTriangleMesh( mesh );
 	}
 
 	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )

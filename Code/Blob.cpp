@@ -222,7 +222,7 @@ void Blob::Teleport( const _3DMath::AffineTransform& transform )
 	particleSystem.ResetMotion();
 }
 
-void Blob::RegisterTrackCollisionObject( _3DMath::BoundingBoxTree* boxTree, double friction )
+void Blob::RegisterGroundCollisionObject( _3DMath::BoundingBoxTree* boxTree, double friction )
 {
 	ParticleSystem::BoundingBoxTreeCollisionObject* collisionObject = new ParticleSystem::BoundingBoxTreeCollisionObject();
 	collisionObject->boxTree = boxTree;

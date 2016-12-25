@@ -4,6 +4,7 @@
 
 #include <wx/string.h>
 #include "Blob.h"
+#include "ModelCache.h"
 #include "Receptacle.h"
 #include <TriangleMesh.h>
 #include <Renderer.h>
@@ -28,16 +29,11 @@ public:
 
 private:
 
-	void DeleteBlobList( void );
-
 	BlobList blobList;
 	ReceptacleList receptacleList;
-	Texture* texture;
 	_3DMath::Vector respawnLocation;
 	_3DMath::Plane deathPlane;
-	_3DMath::TriangleMesh mesh;
-	_3DMath::BoundingBoxTree* boxTree;
-	// TODO: Own list of orbs here.
+	ModelNameList groundList;
 };
 
 // Stage.h

@@ -7,6 +7,7 @@
 #include "Canvas.h"
 #include "Sound.h"
 #include "Message.h"
+#include "ModelCache.h"
 #include <wx/image.h>
 
 Application::Application( void )
@@ -16,6 +17,7 @@ Application::Application( void )
 	stage = nullptr;
 	sound = nullptr;
 	messageSystem = nullptr;
+	modelCache = nullptr;
 }
 
 /*virtual*/ Application::~Application( void )
@@ -24,6 +26,7 @@ Application::Application( void )
 	delete stage;
 	delete sound;
 	delete messageSystem;
+	delete modelCache;
 }
 
 /*virtual*/ bool Application::OnInit( void )
@@ -34,9 +37,10 @@ Application::Application( void )
 	wxInitAllImageHandlers();
 
 	messageSystem = new MessageSystem();
-
+	modelCache = new ModelCache();
 	sound = new Sound();
 
+	// TODO: Add way to redetect controller input type from the menu-bar.
 	controller = new XboxController();
 	if( !controller->SetupAndConnect() )
 	{
