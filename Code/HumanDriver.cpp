@@ -8,7 +8,7 @@
 
 HumanDriver::HumanDriver( void )
 {
-	maxTurnRate = M_PI / 4.0;
+	maxTurnRate = M_PI;
 }
 
 /*virtual*/ HumanDriver::~HumanDriver( void )

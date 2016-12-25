@@ -82,7 +82,10 @@ void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 		iter++;
 	}
 
+	// TODO: By adjusting forces, I may be able to get rid of this hack.
+	timeKeeper.fixedDeltaTimeMilliseconds = 50.0;
 	particleSystem.Simulate( timeKeeper );
+	timeKeeper.fixedDeltaTimeMilliseconds = 0.0;
 }
 
 void Blob::GetAxleAxis( _3DMath::Vector& unitAxleAxis ) const

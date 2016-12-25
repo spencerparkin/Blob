@@ -15,8 +15,8 @@ Camera::Camera( void )
 	viewAngle = M_PI / 3.0;
 	viewTransform.linearTransform.Identity();
 	viewTransform.translation.Set( 0.0, 0.0, 20.0 );
-	maxStrafeSpeed = 5.0;
-	maxRotateSpeed = M_PI / 3.0;
+	maxStrafeSpeed = 15.0;
+	maxRotateSpeed = M_PI;
 }
 
 /*virtual*/ Camera::~Camera( void )
@@ -113,7 +113,7 @@ void Camera::Update( const _3DMath::TimeKeeper& timeKeeper )
 			double distance = cameraToDesiredLocation.Length();
 			if( distance > 0.0 )
 			{
-				double cameraMoveSpeed = 1.0 * distance;
+				double cameraMoveSpeed = 3.0 * distance;
 				double cameraMoveDistance = cameraMoveSpeed * deltaTime;
 
 				_3DMath::Vector cameraMoveDirection;
