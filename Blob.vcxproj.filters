@@ -79,6 +79,9 @@
     <ClInclude Include="Code\ModelCache.h">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ModelCache.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">

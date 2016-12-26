@@ -19,13 +19,8 @@ public:
 	ModelCache( void );
 	virtual ~ModelCache( void );
 
-	enum Type
-	{
-		MODEL_TYPE_GENERIC,
-		MODEL_TYPE_GROUND,
-	};
-
-	Model* GetModel( const std::string& modelName, Type type = MODEL_TYPE_GENERIC );
+	template< typename Type >
+	Type* GetModel( const std::string& modelName );
 
 	void Clear( void );
 	void Clear( const std::string& modelName );
@@ -42,6 +37,8 @@ public:
 	Model( void );
 	virtual ~Model( void );
 
+	static Model* Create( void ) { return new Model(); }
+
 	virtual bool Load( const std::string& modelName );
 	virtual bool Unload( void );
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform* affineTransform = nullptr ) const;
@@ -57,11 +54,15 @@ public:
 	GroundModel( void );
 	virtual ~GroundModel( void );
 
+	static GroundModel* Create( void ) { return new GroundModel(); }
+
 	virtual bool Load( const std::string& modelName ) override;
 	virtual bool Unload( void ) override;
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::AffineTransform* affineTransform = nullptr ) const override;
 
 	_3DMath::BoundingBoxTree* boxTree;
 };
+
+#include "ModelCache.hpp"
 
 // ModelCache.h

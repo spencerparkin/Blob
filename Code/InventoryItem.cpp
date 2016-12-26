@@ -39,7 +39,7 @@ ModelInventoryItem::ModelInventoryItem( void )
 
 /*virtual*/ void ModelInventoryItem::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper, const _3DMath::AffineTransform& transform ) const
 {
-	Model* model = wxGetApp().modelCache->GetModel( GetModelName() );
+	Model* model = wxGetApp().modelCache->GetModel< Model >( GetModelName() );
 	if( model )
 	{
 		Camera* camera = wxGetApp().GetCamera();

@@ -22,42 +22,6 @@ ModelCache::ModelCache( void )
 	Clear();
 }
 
-Model* ModelCache::GetModel( const std::string& modelName, Type type /*= MODEL_TYPE_GENERIC*/ )
-{
-	Model* model = nullptr;
-
-	ModelMap::iterator iter = modelMap.find( modelName );
-	if( iter != modelMap.end() )
-		model = iter->second;
-	else
-	{
-		switch( type )
-		{
-			default:
-			case MODEL_TYPE_GENERIC:
-			{
-				model = new Model();
-				break;
-			}
-			case MODEL_TYPE_GROUND:
-			{
-				model = new GroundModel();
-				break;
-			}
-		}
-
-		if( model->Load( modelName ) )
-			modelMap.insert( std::pair< std::string, Model* >( modelName, model ) );
-		else
-		{
-			delete model;
-			model = nullptr;
-		}
-	}
-
-	return model;
-}
-
 void ModelCache::Clear( void )
 {
 	while( modelMap.size() > 0 )

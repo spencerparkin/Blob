@@ -135,7 +135,7 @@ bool Stage::Load( const wxString& stageFile )
 			if( modelName.IsEmpty() )
 				return false;
 
-			Model* model = wxGetApp().modelCache->GetModel( ( const char* )modelName.c_str(), ModelCache::MODEL_TYPE_GROUND );
+			GroundModel* model = wxGetApp().modelCache->GetModel< GroundModel >( ( const char* )modelName.c_str() );
 			if( !model )
 				return false;
 
@@ -193,7 +193,7 @@ bool Stage::Load( const wxString& stageFile )
 
 		for( ModelNameList::iterator groundIter = groundList.begin(); groundIter != groundList.end(); groundIter++ )
 		{
-			GroundModel* groundModel = ( GroundModel* )wxGetApp().modelCache->GetModel( *groundIter );
+			GroundModel* groundModel = wxGetApp().modelCache->GetModel< GroundModel >( *groundIter );
 
 			blob->RegisterGroundCollisionObject( groundModel->boxTree, 1.0 );
 		}
@@ -221,7 +221,7 @@ void Stage::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& time
 
 	for( ModelNameList::iterator iter = groundList.begin(); iter != groundList.end(); iter++ )
 	{
-		Model* model = wxGetApp().modelCache->GetModel( *iter );
+		GroundModel* model = wxGetApp().modelCache->GetModel< GroundModel >( *iter );
 		if( model )
 		{
 			// TODO: Only render if mesh at least partially visible in frustum?

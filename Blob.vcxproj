@@ -160,6 +160,7 @@
     <ClInclude Include="Code\InventoryPanel.h" />
     <ClInclude Include="Code\Message.h" />
     <ClInclude Include="Code\ModelCache.h" />
+    <ClInclude Include="Code\ModelCache.hpp" />
     <ClInclude Include="Code\ModifiersPanel.h" />
     <ClInclude Include="Code\Panel.h" />
     <ClInclude Include="Code\Property.h" />
