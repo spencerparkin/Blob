@@ -57,7 +57,6 @@ private:
 
 	Texture* texture;
 
-	void AddSymmetricVertices( const _3DMath::Vector& vector );
 	void MakeSpring( int index0, int index1, std::vector< int >& particleHandles, double stiffness );
 
 	_3DMath::ParticleSystem particleSystem;

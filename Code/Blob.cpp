@@ -118,7 +118,7 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		{
 			radius = sqrt( 3.0 );
 
-			AddSymmetricVertices( Vector( 1.0, 1.0, 1.0 ) );
+			triangleMesh.AddSymmetricVertices( Vector( 1.0, 1.0, 1.0 ) );
 
 			break;
 		}
@@ -126,9 +126,9 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		{
 			radius = sqrt( 1.0 + PHI * PHI );
 
-			AddSymmetricVertices( Vector( 0.0, 1.0, PHI ) );
-			AddSymmetricVertices( Vector( 1.0, PHI, 0.0 ) );
-			AddSymmetricVertices( Vector( PHI, 0.0, 1.0 ) );
+			triangleMesh.AddSymmetricVertices( Vector( 0.0, 1.0, PHI ) );
+			triangleMesh.AddSymmetricVertices( Vector( 1.0, PHI, 0.0 ) );
+			triangleMesh.AddSymmetricVertices( Vector( PHI, 0.0, 1.0 ) );
 
 			break;
 		}
@@ -136,10 +136,10 @@ void Blob::MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath:
 		{
 			radius = sqrt( 3.0 );
 
-			AddSymmetricVertices( Vector( 1.0, 1.0, 1.0 ) );
-			AddSymmetricVertices( Vector( 0.0, 1.0 / PHI, PHI ) );
-			AddSymmetricVertices( Vector( 1.0 / PHI, PHI, 0.0 ) );
-			AddSymmetricVertices( Vector( PHI, 0.0, 1.0 / PHI ) );
+			triangleMesh.AddSymmetricVertices( Vector( 1.0, 1.0, 1.0 ) );
+			triangleMesh.AddSymmetricVertices( Vector( 0.0, 1.0 / PHI, PHI ) );
+			triangleMesh.AddSymmetricVertices( Vector( 1.0 / PHI, PHI, 0.0 ) );
+			triangleMesh.AddSymmetricVertices( Vector( PHI, 0.0, 1.0 / PHI ) );
 
 			break;
 		}
@@ -228,28 +228,6 @@ void Blob::RegisterGroundCollisionObject( _3DMath::BoundingBoxTree* boxTree, dou
 	collisionObject->boxTree = boxTree;
 	collisionObject->friction = friction;
 	particleSystem.collisionObjectList->push_back( collisionObject );
-}
-
-void Blob::AddSymmetricVertices( const Vector& vector )
-{
-	for( int i = 0; i < 8; i++ )
-	{
-		if( ( ( i & 1 ) && vector.x == 0.0 ) ||
-			( ( i & 2 ) && vector.y == 0.0 ) ||
-			( ( i & 4 ) && vector.z == 0.0 ) )
-		{
-			continue;
-		}
-		
-		Vertex vertex;
-		vertex.position = vector;
-		
-		vertex.position.x = ( i & 1 ) ? -vector.x : vector.x;
-		vertex.position.y = ( i & 2 ) ? -vector.y : vector.y;
-		vertex.position.z = ( i & 4 ) ? -vector.z : vector.z;
-	
-		triangleMesh.vertexArray->push_back( vertex );
-	}
 }
 
 void Blob::MakeSpring( int index0, int index1, std::vector< int >& particleHandles, double stiffness )
