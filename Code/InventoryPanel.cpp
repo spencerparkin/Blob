@@ -37,6 +37,7 @@ InventoryPanel::InventoryPanel( void )
 
 /*virtual*/ void InventoryPanel::Update( void )
 {
+	// TODO: Examine controller here to change selection and use items.
 }
 
 void InventoryPanel::InventoryChangedMessageHandler( Message* message )
