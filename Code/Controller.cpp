@@ -189,27 +189,47 @@ KeyboardMouseController::KeyboardMouseController( void )
 
 /*virtual*/ bool KeyboardMouseController::UpdateState( void )
 {
+	for( int button = 0; button < BUTTON_COUNT; button++ )
+	{
+		unsigned int keyCode = MapButtonToKeyboardKey( button );
+
+		KeyStateMap::iterator iter = keyStateMap.find( keyCode );
+		if( iter == keyStateMap.end() )
+		{
+			keyStateMap.insert( std::pair< unsigned int, KeyState >( keyCode, KeyState() ) );
+			iter = keyStateMap.find( keyCode );
+			iter->second.down = false;
+			iter->second.pressed = false;
+		}
+		
+		KeyState* keyState = &iter->second;
+
+		bool keyDown = wxGetKeyState( ( wxKeyCode )keyCode );
+		keyState->pressed = !keyState->down && keyDown;
+		keyState->down = keyDown;
+	}
+
 	return true;
 }
 
-unsigned char KeyboardMouseController::MapButtonToKeyboardKey( int button )
+unsigned int KeyboardMouseController::MapButtonToKeyboardKey( int button )
 {
 	switch( button )
 	{
-		case BUTTON_A:				return ( unsigned char )WXK_CONTROL_A;
-		case BUTTON_B:				return ( unsigned char )WXK_CONTROL_B;
-		case BUTTON_X:				return ( unsigned char )WXK_CONTROL_X;
-		case BUTTON_Y:				return ( unsigned char )WXK_CONTROL_Y;
-		case BUTTON_DPAD_UP:		return ( unsigned char )WXK_HOME;
-		case BUTTON_DPAD_DN:		return ( unsigned char )WXK_END;
-		case BUTTON_DPAD_LF:		return ( unsigned char )WXK_DELETE;
-		case BUTTON_DPAD_RT:		return ( unsigned char )WXK_PAGEDOWN;
-		case BUTTON_L_SHOULDER:		return ( unsigned char )WXK_NUMPAD7;
-		case BUTTON_R_SHOULDER:		return ( unsigned char )WXK_NUMPAD9;
-		case BUTTON_BACK:			return ( unsigned char )'B';
-		case BUTTON_START:			return ( unsigned char )'S';
-		case BUTTON_L_THUMB:		return ( unsigned char )WXK_CONTROL_L;
-		case BUTTON_R_THUMB:		return ( unsigned char )WXK_CONTROL_R;
+		case BUTTON_A:				return 'a';
+		case BUTTON_B:				return 'b';
+		case BUTTON_X:				return 'x';
+		case BUTTON_Y:				return 'y';
+		case BUTTON_DPAD_UP:		return ( unsigned int )WXK_HOME;
+		case BUTTON_DPAD_DN:		return ( unsigned int )WXK_END;
+		case BUTTON_DPAD_LF:		return ( unsigned int )WXK_DELETE;
+		case BUTTON_DPAD_RT:		return ( unsigned int )WXK_PAGEDOWN;
+		case BUTTON_L_SHOULDER:		return ( unsigned int )WXK_NUMPAD7;
+		case BUTTON_R_SHOULDER:		return ( unsigned int )WXK_NUMPAD9;
+		case BUTTON_BACK:			return 'b';
+		case BUTTON_START:			return 's';
+		case BUTTON_L_THUMB:		return 'l';
+		case BUTTON_R_THUMB:		return 'r';
 	}
 
 	return 0;
@@ -217,15 +237,29 @@ unsigned char KeyboardMouseController::MapButtonToKeyboardKey( int button )
 
 /*virtual*/ bool KeyboardMouseController::ButtonDown( int button )
 {
-	unsigned char keyCode = MapButtonToKeyboardKey( button );
-	bool keyDown = wxGetKeyState( ( wxKeyCode )keyCode );
-	return keyDown;
+	KeyState* keyState = nullptr;
+	if( !GetKeyState( button, keyState ) )
+		return false;
+	return keyState->down;
 }
 
 /*virtual*/ bool KeyboardMouseController::ButtonPressed( int button )
 {
-	// TODO: Use wxWidget's normal event-driven stuff to handle this case.
-	return false;
+	KeyState* keyState = nullptr;
+	if( !GetKeyState( button, keyState ) )
+		return false;
+	return keyState->pressed;
+}
+
+bool KeyboardMouseController::GetKeyState( int button, KeyState*& keyState )
+{
+	keyState = nullptr;
+	unsigned int keyCode = MapButtonToKeyboardKey( button );
+	KeyStateMap::iterator iter = keyStateMap.find( keyCode );
+	if( iter == keyStateMap.end() )
+		return false;
+	keyState = &iter->second;
+	return true;
 }
 
 /*virtual*/ void KeyboardMouseController::GetAnalogTrigger( int side, double& value )

@@ -33,6 +33,7 @@ public:
 		BUTTON_R_THUMB,
 		LEFT_SIDE,
 		RIGHT_SIDE,
+		BUTTON_COUNT,
 	};
 
 	virtual bool SetupAndConnect( void ) = 0;
@@ -81,7 +82,18 @@ public:
 	virtual void GetAnalogTrigger( int side, double& value ) override;
 	virtual void GetAnalogJoyStick( int side, _3DMath::Vector& unitDir, double& mag ) override;
 
-	unsigned char MapButtonToKeyboardKey( int button );
+	unsigned int MapButtonToKeyboardKey( int button );
+
+	struct KeyState
+	{
+		bool down;
+		bool pressed;
+	};
+
+	typedef std::map< unsigned int, KeyState > KeyStateMap;
+	KeyStateMap keyStateMap;
+
+	bool GetKeyState( int button, KeyState*& keyState );
 };
 
 class JoyStickController : public Controller

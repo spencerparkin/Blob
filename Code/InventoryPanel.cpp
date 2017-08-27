@@ -61,7 +61,7 @@ InventoryPanel::InventoryPanel( void )
 			selection = 0;
 	}
 
-	if( selection >= 0 )
+	if( selection >= 0 && selection < ( signed )listBox->GetCount() )
 		listBox->SetSelection( selection );
 
 	if( controller->ButtonPressed( Controller::BUTTON_L_SHOULDER ) )
