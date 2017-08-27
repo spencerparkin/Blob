@@ -263,6 +263,7 @@ void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 			_3DMath::AffineTransform transform;
 			transform.translation.Subtract( respawnLocation, location );
 			blob->Teleport( transform );
+			blob->WipeInventory( true );
 		}
 	}
 

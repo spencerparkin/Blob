@@ -3,6 +3,9 @@
 #pragma once
 
 #include "Panel.h"
+#include <wx/listbox.h>
+
+class Message;
 
 class InventoryPanel : public Panel
 {
@@ -15,7 +18,9 @@ public:
 	virtual void CreateControls( void ) override;
 	virtual void Update( void ) override;
 
-	//...
+	void InventoryChangedMessageHandler( Message* message );
+
+	wxListBox* listBox;
 };
 
 // InventoryPanel.h

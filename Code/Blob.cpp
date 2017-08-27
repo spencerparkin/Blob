@@ -5,6 +5,7 @@
 #include "Driver.h"
 #include "Frame.h"
 #include "Application.h"
+#include "Message.h"
 #include "InventoryItem.h"
 #include <ListFunctions.h>
 
@@ -26,7 +27,7 @@ Blob::Blob( void ) : maxTorque( 5.0 ), friction( 1.0 ), gravity( -4.0 )
 
 /*virtual*/ Blob::~Blob( void )
 {
-	_3DMath::FreeList< InventoryItem >( *inventoryItemList );
+	WipeInventory();
 
 	delete texture;
 	delete driver;
@@ -220,6 +221,14 @@ void Blob::Teleport( const _3DMath::AffineTransform& transform )
 {
 	triangleMesh.Transform( transform );
 	particleSystem.ResetMotion();
+}
+
+void Blob::WipeInventory( bool sendMessage /*= false*/ )
+{
+	_3DMath::FreeList< InventoryItem >( *inventoryItemList );
+
+	if( sendMessage )
+		wxGetApp().messageSystem->SendAMessage( new InventoryChangedMessage( GetHandle() ) );
 }
 
 void Blob::RegisterGroundCollisionObject( _3DMath::BoundingBoxTree* boxTree, double friction )

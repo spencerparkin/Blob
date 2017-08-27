@@ -20,6 +20,7 @@ public:
 
 	virtual void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper, const _3DMath::AffineTransform& transform ) const = 0;
 	virtual void Use( Blob* blob ) = 0;
+	virtual std::string GetDisplayName( void ) const = 0;
 };
 
 typedef InventoryItem* ( *InventoryItemCreateFunc )( void );
@@ -50,6 +51,7 @@ public:
 	virtual ~TorqueBoosterInventoryItem( void );
 
 	virtual std::string GetModelName( void ) const override;
+	virtual std::string GetDisplayName( void ) const override;
 	virtual void Use( Blob* blob ) override;
 	virtual _3DMath::HandleObject* Clone( void ) const override;
 
@@ -65,6 +67,7 @@ public:
 	virtual ~GravityBoosterInventoryItem( void );
 
 	virtual std::string GetModelName( void ) const override;
+	virtual std::string GetDisplayName( void ) const override;
 	virtual void Use( Blob* blob ) override;
 	virtual _3DMath::HandleObject* Clone( void ) const override;
 
@@ -80,6 +83,7 @@ public:
 	virtual ~FrictionBoosterInventoryItem( void );
 
 	virtual std::string GetModelName( void ) const override;
+	virtual std::string GetDisplayName( void ) const override;
 	virtual void Use( Blob* blob ) override;
 	virtual _3DMath::HandleObject* Clone( void ) const override;
 

@@ -82,6 +82,11 @@ TorqueBoosterInventoryItem::TorqueBoosterInventoryItem( void )
 	return "TorqueBoost";
 }
 
+/*virtual*/ std::string TorqueBoosterInventoryItem::GetDisplayName( void ) const
+{
+	return "Torque Boost";
+}
+
 /*virtual*/ void TorqueBoosterInventoryItem::Use( Blob* blob )
 {
 	AddModifier* addModifier = new AddModifier( torqueBoost, torqueBoostTimeSeconds );
@@ -116,6 +121,11 @@ GravityBoosterInventoryItem::GravityBoosterInventoryItem( void )
 	return "GravityBoost";
 }
 
+/*virtual*/ std::string GravityBoosterInventoryItem::GetDisplayName( void ) const
+{
+	return "Gravity Boost";
+}
+
 /*virtual*/ void GravityBoosterInventoryItem::Use( Blob* blob )
 {
 	AddModifier* addModifier = new AddModifier( gravityBoost, gravityBoostTimeSeconds );
@@ -148,6 +158,11 @@ FrictionBoosterInventoryItem::FrictionBoosterInventoryItem( void )
 /*virtual*/ std::string FrictionBoosterInventoryItem::GetModelName( void ) const
 {
 	return "FrictionBoost";
+}
+
+/*virtual*/ std::string FrictionBoosterInventoryItem::GetDisplayName( void ) const
+{
+	return "Friction Boost";
 }
 
 /*virtual*/ void FrictionBoosterInventoryItem::Use( Blob* blob )

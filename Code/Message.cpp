@@ -132,4 +132,22 @@ PropertyModifiedMessage::PropertyModifiedMessage( int blobHandle, int propertyHa
 	return "PropertyModified";
 }
 
+//-----------------------------------------------------------------------------------
+//                              InventoryChangedMessage
+//-----------------------------------------------------------------------------------
+
+InventoryChangedMessage::InventoryChangedMessage( int blobHandle )
+{
+	this->blobHandle = blobHandle;
+}
+
+/*virtual*/ InventoryChangedMessage::~InventoryChangedMessage( void )
+{
+}
+
+/*virtual*/ std::string InventoryChangedMessage::GetType( void ) const
+{
+	return "InventoryChanged";
+}
+
 // Message.cpp

@@ -133,6 +133,7 @@ InventoryItemReceptacle::InventoryItemReceptacle( void )
 		blob->inventoryItemList->push_back( inventoryItem );
 		inventoryItem = nullptr;
 		regenerationRemainingTimeSeconds = regenerationRemainingResetTimeSeconds;
+		wxGetApp().messageSystem->SendAMessage( new InventoryChangedMessage( blob->GetHandle() ) );
 	}
 }
 
@@ -162,6 +163,7 @@ TeleportReceptacle::TeleportReceptacle( void )
 
 /*virtual*/ void TeleportReceptacle::EnterBlob( Blob* blob )
 {
+	// TODO: Teleport the blob somewhere.
 }
 
 /*virtual*/ void TeleportReceptacle::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )
@@ -182,6 +184,7 @@ ChangeShapeReceptacle::ChangeShapeReceptacle( void )
 
 /*virtual*/ void ChangeShapeReceptacle::EnterBlob( Blob* blob )
 {
+	// TODO: Change the shape of the blob.
 }
 
 /*virtual*/ void ChangeShapeReceptacle::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )

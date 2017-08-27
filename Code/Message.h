@@ -75,4 +75,16 @@ public:
 	int modifierHandle;
 };
 
+class InventoryChangedMessage : public Message
+{
+public:
+
+	InventoryChangedMessage( int blobHandle );
+	virtual ~InventoryChangedMessage( void );
+
+	virtual std::string GetType( void ) const override;
+
+	int blobHandle;
+};
+
 // Message.h
