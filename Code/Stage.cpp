@@ -214,6 +214,20 @@ bool Stage::Unload( void )
 	return true;
 }
 
+Blob* Stage::GetHumanDrivenBlob( void )
+{
+	// There should only be one of these.  If that ever changed, then we would
+	// need more information to be passed to this sub-routine.
+	for( BlobList::iterator iter = blobList.begin(); iter != blobList.end(); iter++ )
+	{
+		Blob* blob = *iter;
+		if( dynamic_cast< HumanDriver* >( blob->driver ) )
+			return blob;
+	}
+
+	return nullptr;
+}
+
 void Stage::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper )
 {
 	// TODO: We need a sky-dome that shows stars and the milky way that rotates slowly in random directions.

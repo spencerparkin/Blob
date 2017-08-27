@@ -4,8 +4,11 @@
 #include "Application.h"
 #include "Message.h"
 #include "Blob.h"
+#include "Stage.h"
 #include "HumanDriver.h"
+#include "Controller.h"
 #include <wx/sizer.h>
+#include <wx/regex.h>
 #include <strstream>
 
 InventoryPanel::InventoryPanel( void )
@@ -37,7 +40,50 @@ InventoryPanel::InventoryPanel( void )
 
 /*virtual*/ void InventoryPanel::Update( void )
 {
-	// TODO: Examine controller here to change selection and use items.
+	Controller* controller = wxGetApp().controller;
+
+	int selection = -1;
+
+	if( controller->ButtonPressed( Controller::BUTTON_DPAD_DN ) )
+	{
+		selection = listBox->GetSelection();
+		if( selection == wxNOT_FOUND )
+			selection = 0;
+		else if( --selection < 0 )
+			selection = listBox->GetCount() - 1;
+	}
+	else if( controller->ButtonPressed( Controller::BUTTON_DPAD_UP ) )
+	{
+		selection = listBox->GetSelection();
+		if( selection == wxNOT_FOUND )
+			selection = listBox->GetCount() - 1;
+		else if( ++selection >= ( signed )listBox->GetCount() )
+			selection = 0;
+	}
+
+	if( selection >= 0 )
+		listBox->SetSelection( selection );
+
+	if( controller->ButtonPressed( Controller::BUTTON_L_SHOULDER ) )
+	{
+		selection = listBox->GetSelection();
+		if( selection != wxNOT_FOUND )
+		{
+			wxString inventoryItemString = listBox->GetString( selection );
+
+			wxRegEx regex( "(.*)\\([0-9]+\\)" );
+			if( regex.Matches( inventoryItemString ) )
+			{
+				inventoryItemString = regex.GetMatch( inventoryItemString, 1 );
+				inventoryItemString.Trim();
+
+				std::string displayName( inventoryItemString.c_str() );
+
+				Blob* blob = wxGetApp().stage->GetHumanDrivenBlob();
+				blob->UseInventoryItem( displayName );
+			}
+		}
+	}
 }
 
 void InventoryPanel::InventoryChangedMessageHandler( Message* message )

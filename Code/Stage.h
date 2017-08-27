@@ -27,6 +27,8 @@ public:
 	void Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& timeKeeper );
 	void Simulate( const _3DMath::TimeKeeper& timeKeeper );
 
+	Blob* GetHumanDrivenBlob( void );
+
 private:
 
 	BlobList blobList;

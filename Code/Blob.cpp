@@ -231,6 +231,24 @@ void Blob::WipeInventory( bool sendMessage /*= false*/ )
 		wxGetApp().messageSystem->SendAMessage( new InventoryChangedMessage( GetHandle() ) );
 }
 
+bool Blob::UseInventoryItem( const std::string& displayName )
+{
+	for( InventoryItemList::iterator iter = inventoryItemList->begin(); iter != inventoryItemList->end(); iter++ )
+	{
+		InventoryItem* inventoryItem = *iter;
+		if( inventoryItem->GetDisplayName() == displayName )
+		{
+			inventoryItem->Use( this );
+			delete inventoryItem;
+			inventoryItemList->erase( iter );
+			wxGetApp().messageSystem->SendAMessage( new InventoryChangedMessage( GetHandle() ) );
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void Blob::RegisterGroundCollisionObject( _3DMath::BoundingBoxTree* boxTree, double friction )
 {
 	ParticleSystem::BoundingBoxTreeCollisionObject* collisionObject = new ParticleSystem::BoundingBoxTreeCollisionObject();

@@ -36,6 +36,7 @@ public:
 	void MakePolyhedron( Polyhedron polyhedron, bool subDivide, const _3DMath::AffineTransform& transform );
 	void Teleport( const _3DMath::AffineTransform& transform );
 	void WipeInventory( bool sendMessage = false );
+	bool UseInventoryItem( const std::string& displayName );
 
 	virtual void GetLocation( _3DMath::Vector& location ) const override;
 	virtual void GetFacingDirection( _3DMath::Vector& facingUnitDir ) const override;
