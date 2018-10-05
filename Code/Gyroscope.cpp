@@ -91,7 +91,7 @@ void Gyroscope::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 }
 
 // I have no idea if this will work or not.  The plan is to apply a torque
-// force on the gyro to get it spinning in the XY plane.  That part is easy.  (Uh...no, the whole things falls apart.  My simulation is too unstable and unsound and not rooted in good physics or calculus methods.)
+// force on the gyro to get it spinning in the XY plane.  That part is easy.  (Uh...no, the whole things just falls apart.  My simulation is too unstable and unsound and not rooted in good physics or calculus methods.)
 // Then, each frame, calculate the plane that best fits all the points of the
 // gyro, then apply a transient torque force to the gyro in that plane and
 // perpendicular to the Z-axis.  The question is then whether the direction
