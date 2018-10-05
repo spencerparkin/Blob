@@ -59,8 +59,8 @@ void Blob::Render( _3DMath::Renderer& renderer )
 
 void Blob::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 {
-	if( driver )
-		driver->Drive( this, timeKeeper );
+	//if( driver )
+	//	driver->Drive( this, timeKeeper );
 
 	friction.Simulate( timeKeeper );
 	maxTorque.Simulate( timeKeeper );

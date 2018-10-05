@@ -1,6 +1,8 @@
 // Gyroscope.cpp
 
 #include "Gyroscope.h"
+#include "Application.h"
+#include "Controller.h"
 #include <Vector.h>
 #include <TimeKeeper.h>
 
@@ -72,13 +74,24 @@ void Gyroscope::Render( _3DMath::Renderer& renderer )
 
 void Gyroscope::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 {
+	Controller* controller = wxGetApp().controller;
+
+	if( controller->ButtonDown( Controller::BUTTON_A ) )
+	{
+		double torqueMag = 30.0;
+		_3DMath::ParticleSystem::TorqueForce* torqueForce = new _3DMath::ParticleSystem::TorqueForce( &particleSystem );
+		torqueForce->torque = _3DMath::Vector( 0.0, 0.0, torqueMag );
+		torqueForce->transient = true;
+		particleSystem.forceList->push_back( torqueForce );
+	}
+
 	timeKeeper.fixedDeltaTimeMilliseconds = 50.0;
 	particleSystem.Simulate( timeKeeper );
 	timeKeeper.fixedDeltaTimeMilliseconds = 0.0;
 }
 
 // I have no idea if this will work or not.  The plan is to apply a torque
-// force on the gyro to get it spinning in the XY plane.  That part is easy.
+// force on the gyro to get it spinning in the XY plane.  That part is easy.  (Uh...no, the whole things falls apart.  My simulation is too unstable and unsound and not rooted in good physics or calculus methods.)
 // Then, each frame, calculate the plane that best fits all the points of the
 // gyro, then apply a transient torque force to the gyro in that plane and
 // perpendicular to the Z-axis.  The question is then whether the direction
