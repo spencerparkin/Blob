@@ -82,6 +82,9 @@
     <ClInclude Include="Code\ModelCache.hpp">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Gyroscope.h">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\Application.cpp">
@@ -148,6 +151,9 @@
       <Filter>Code</Filter>
     </ClCompile>
     <ClCompile Include="Code\ModelCache.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Gyroscope.cpp">
       <Filter>Code</Filter>
     </ClCompile>
   </ItemGroup>

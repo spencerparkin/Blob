@@ -155,6 +155,7 @@
     <ClInclude Include="Code\Driver.h" />
     <ClInclude Include="Code\Frame.h" />
     <ClInclude Include="Code\GLRenderer.h" />
+    <ClInclude Include="Code\Gyroscope.h" />
     <ClInclude Include="Code\HumanDriver.h" />
     <ClInclude Include="Code\InventoryItem.h" />
     <ClInclude Include="Code\InventoryPanel.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Code\Driver.cpp" />
     <ClCompile Include="Code\Frame.cpp" />
     <ClCompile Include="Code\GLRenderer.cpp" />
+    <ClCompile Include="Code\Gyroscope.cpp" />
     <ClCompile Include="Code\HumanDriver.cpp" />
     <ClCompile Include="Code\InventoryItem.cpp" />
     <ClCompile Include="Code\InventoryPanel.cpp" />

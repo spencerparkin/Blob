@@ -15,10 +15,13 @@
 
 Stage::Stage( void )
 {
+	gyroscope = new Gyroscope( 10.0, 100.0, 20 );
 }
 
 /*virtual*/ Stage::~Stage( void )
 {
+	delete gyroscope;
+
 	( void )Unload();
 }
 
@@ -179,8 +182,8 @@ bool Stage::Load( const wxString& stageFile )
 			{
 				blob->driver = new HumanDriver();
 				Camera* camera = wxGetApp().GetCamera();
-				camera->subject = blob;
-				camera->mode = Camera::MODE_FOLLOW_BEHIND_SUBJECT;
+				//camera->subject = blob;
+				//camera->mode = Camera::MODE_FOLLOW_BEHIND_SUBJECT;
 			}
 			else if( attribStr == "computer" )
 				blob->driver = new ComputerDriver();
@@ -233,7 +236,7 @@ void Stage::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& time
 	// TODO: We need a sky-dome that shows stars and the milky way that rotates slowly in random directions.
 	// TODO: Shadows by rendering from light-source perspective into off-screen depth map and then using that in a shader?
 
-	for( ModelNameList::iterator iter = groundList.begin(); iter != groundList.end(); iter++ )
+	/*for( ModelNameList::iterator iter = groundList.begin(); iter != groundList.end(); iter++ )
 	{
 		GroundModel* model = wxGetApp().modelCache->GetModel< GroundModel >( *iter );
 		if( model )
@@ -253,7 +256,10 @@ void Stage::Render( _3DMath::Renderer& renderer, const _3DMath::TimeKeeper& time
 	{
 		Receptacle* receptacle = *iter;
 		receptacle->Render( renderer, timeKeeper );
-	}
+	}*/
+
+	if( gyroscope )
+		gyroscope->Render( renderer );
 }
 
 void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )
@@ -286,6 +292,9 @@ void Stage::Simulate( const _3DMath::TimeKeeper& timeKeeper )
 		Receptacle* receptacle = *iter;
 		receptacle->Simulate( timeKeeper, blobList );
 	}
+
+	if( gyroscope )
+		gyroscope->Simulate( timeKeeper );
 }
 
 // Stage.cpp

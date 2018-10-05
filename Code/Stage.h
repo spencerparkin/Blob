@@ -4,6 +4,7 @@
 
 #include <wx/string.h>
 #include "Blob.h"
+#include "Gyroscope.h"
 #include "ModelCache.h"
 #include "Receptacle.h"
 #include <TriangleMesh.h>
@@ -31,6 +32,7 @@ public:
 
 private:
 
+	Gyroscope* gyroscope;
 	BlobList blobList;
 	ReceptacleList receptacleList;
 	_3DMath::Vector respawnLocation;
